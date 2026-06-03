@@ -6,3 +6,4 @@ fuku.db-journal
 .DS_Store
 node_modules/
 *.log
+.vercel
