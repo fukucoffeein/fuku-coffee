@@ -7,7 +7,7 @@
     "fuku-coffee": {
       "type": "web",
       "routePrefix": "/",
-      "framework": "other"
+      "entrypoint": "api/index.py"
     }
   }
 }
