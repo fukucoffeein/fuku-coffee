@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FUKU Coffee — Premium Coffee from Surat | Beans, Instant & Cold Brew</title>
+<meta name="description" content="FUKU Coffee — small-batch roasted beans, premium instant, and ready-to-drink cold brew. YOKO, KIYO & YUHI blends. Order on WhatsApp. Shipped across India from Surat, Gujarat." />
+<meta name="theme-color" content="#3B0B6E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Caveat:wght@500;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,700;9..144,900&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- RESELLER BANNER (shown when ?ref=CODE in URL) -->
+<div class="reseller-banner" id="resellerBanner" hidden>
+  <span class="rb-icon">🤝</span>
+  <span class="rb-text">
+    You're shopping with <strong id="rbName"></strong><span id="rbCity"></span>
+    — <span class="rb-meta">your order will be credited to their account.</span>
+  </span>
+  <button class="rb-close" id="rbClose" aria-label="Remove">×</button>
+</div>
+
+<!-- ANNOUNCEMENT BAR -->
+<div class="announce">
+  <div class="announce-track">
+    <span>☕ FREE DELIVERY WITHIN 5 KM OF PIPLOD, SURAT</span>
+    <span>•</span>
+    <span>ROASTED FRESH IN SURAT, GUJARAT</span>
+    <span>•</span>
+    <span>📱 ORDER ON WHATSAPP — INSTANT REPLY</span>
+    <span>•</span>
+    <span>UP TO 30% OFF — LIMITED TIME</span>
+    <span>•</span>
+    <span>☕ FREE DELIVERY WITHIN 5 KM OF PIPLOD, SURAT</span>
+    <span>•</span>
+    <span>ROASTED FRESH IN SURAT, GUJARAT</span>
+    <span>•</span>
+    <span>📱 ORDER ON WHATSAPP — INSTANT REPLY</span>
+    <span>•</span>
+    <span>UP TO 30% OFF — LIMITED TIME</span>
+  </div>
+</div>
+
+<!-- NAV -->
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <button class="nav-toggle" id="navToggle" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+    <a href="#top" class="logo">
+      <span class="logo-main">FUKU</span>
+      <span class="logo-sub">coffee</span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#shop">Shop</a>
+      <a href="#beans">Coffee Beans</a>
+      <a href="#instant">Instant</a>
+      <a href="#coldbrew">Cold Brew</a>
+      <a href="#brew">Brew Guide</a>
+      <a href="#story">Story</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <a href="https://wa.me/919574323011" target="_blank" class="wa-btn-nav" aria-label="WhatsApp">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.2-1.8-.9-2-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7 0c-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.7l.5-.5c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.2-.7-1.7-1-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4s-1 1-1 2.4 1 2.8 1.2 3 2 3.1 4.9 4.3c.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.1-.3-.2-.6-.4ZM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 5L2 22l5.2-1.4c1.4.8 3.1 1.2 4.8 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2Z"/></svg>
+        <span>Order</span>
+      </a>
+      <button class="icon-btn" id="searchBtn" aria-label="Search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </button>
+      <button class="icon-btn cart-btn" id="cartBtn" aria-label="Cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6h15l-2 11H8L6 6Z"/><path d="M6 6 5 3H2"/><circle cx="10" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/></svg>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="hero-bg-grad"></div>
+  <div class="hero-beans" aria-hidden="true">
+    <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+  </div>
+  <div class="hero-content">
+    <p class="hero-eyebrow"><span class="dot"></span> ROASTED IN PIPLOD · SURAT · GUJARAT</p>
+    <h1 class="hero-title">
+      Coffee that feels like<br/>
+      <span class="hero-cursive">good fortune.</span>
+    </h1>
+    <p class="hero-sub">Small-batch roasted blends, premium instant, and ready-to-drink cold brew. Roasted, packed and delivered locally in Surat — free within 5 km of Piplod.</p>
+    <div class="hero-cta">
+      <a href="#shop" class="btn btn-primary">Shop Coffee →</a>
+      <a href="https://wa.me/919574323011" target="_blank" class="btn btn-wa">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.5 14.4c-.3-.2-1.8-.9-2-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7 0c-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.7l.5-.5c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.2-.7-1.7-1-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4s-1 1-1 2.4 1 2.8 1.2 3 2 3.1 4.9 4.3c.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.1-.3-.2-.6-.4ZM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 5L2 22l5.2-1.4c1.4.8 3.1 1.2 4.8 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2Z"/></svg>
+        Order on WhatsApp
+      </a>
+    </div>
+    <ul class="hero-trust">
+      <li><strong>10,000+</strong><span>cups served</span></li>
+      <li><strong>4.9★</strong><span>1,200+ reviews</span></li>
+      <li><strong>100%</strong><span>Arabica beans</span></li>
+      <li><strong>Free</strong><span>delivery in 5 km</span></li>
+    </ul>
+  </div>
+  <div class="hero-card hero-card-product">
+    <div class="hero-bag bag-yoko">
+      <div class="bag-top"></div>
+      <div class="bag-body">
+        <span class="bag-blend">YOKO</span>
+        <span class="bag-blend-sub">Blend</span>
+        <span class="bag-fuku">FUKU<small>coffee</small></span>
+        <span class="bag-roast">Dark Roast</span>
+      </div>
+    </div>
+    <div class="hero-pricetag">
+      <span class="pt-eyebrow">Best Seller</span>
+      <span class="pt-name">YOKO Blend</span>
+      <span class="pt-price">₹600 <s>₹800</s></span>
+      <span class="pt-save">SAVE 25%</span>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<section class="marquee">
+  <div class="marquee-track">
+    <span>☕ SINGLE ORIGIN</span><span>★</span>
+    <span>SMALL BATCH ROASTED</span><span>★</span>
+    <span>100% ARABICA</span><span>★</span>
+    <span>DELIVERED IN SURAT</span><span>★</span>
+    <span>NO PRESERVATIVES</span><span>★</span>
+    <span>ROASTED-TO-ORDER</span><span>★</span>
+    <span>☕ SINGLE ORIGIN</span><span>★</span>
+    <span>SMALL BATCH ROASTED</span><span>★</span>
+    <span>100% ARABICA</span><span>★</span>
+    <span>DELIVERED IN SURAT</span><span>★</span>
+    <span>NO PRESERVATIVES</span><span>★</span>
+    <span>ROASTED-TO-ORDER</span><span>★</span>
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<section class="cats" id="categories">
+  <div class="section-head">
+    <p class="eyebrow"><span class="dash"></span> 01 — Shop by Category</p>
+    <h2>Pick your <em>pour</em>.</h2>
+    <p class="lede">Whole beans for the ritualists. Instant for the runners. Cold brew for the warm afternoons.</p>
+  </div>
+  <div class="cat-grid">
+    <a href="#beans" class="cat-card">
+      <div class="cat-art cat-art-beans">
+        <div class="cat-bean"></div>
+        <div class="cat-bean"></div>
+        <div class="cat-bean"></div>
+        <div class="cat-bean"></div>
+        <div class="cat-bean"></div>
+      </div>
+      <div class="cat-meta">
+        <span class="cat-num">01</span>
+        <h3>Coffee Beans</h3>
+        <p>Whole bean or ground. 3 signature blends.</p>
+        <span class="cat-cta">Shop Beans →</span>
+      </div>
+    </a>
+    <a href="#instant" class="cat-card">
+      <div class="cat-art cat-art-instant">
+        <div class="cat-cup"></div>
+        <div class="cat-steam"></div>
+      </div>
+      <div class="cat-meta">
+        <span class="cat-num">02</span>
+        <h3>Instant Coffee</h3>
+        <p>Premium dissolve. Bold taste. 30 seconds.</p>
+        <span class="cat-cta">Shop Instant →</span>
+      </div>
+    </a>
+    <a href="#coldbrew" class="cat-card">
+      <div class="cat-art cat-art-cold">
+        <div class="cat-bottle"></div>
+        <div class="cat-ice"></div>
+      </div>
+      <div class="cat-meta">
+        <span class="cat-num">03</span>
+        <h3>Cold Brew</h3>
+        <p>16-hour steep. Smooth, sweet, refreshing.</p>
+        <span class="cat-cta">Shop Cold Brew →</span>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- BESTSELLERS -->
+<section class="bestsellers" id="shop">
+  <div class="section-head">
+    <p class="eyebrow"><span class="dash"></span> 02 — Best Sellers</p>
+    <h2>What everyone's <em>brewing</em>.</h2>
+    <p class="lede">Our top-rated picks across all categories.</p>
+  </div>
+  <div class="bs-grid" id="bsGrid"></div>
+</section>
+
+<!-- COFFEE BEANS -->
+<section class="catalog" id="beans">
+  <div class="section-head split">
+    <div>
+      <p class="eyebrow"><span class="dash"></span> 03 — Coffee Beans</p>
+      <h2>Three blends. One ritual.</h2>
+    </div>
+    <p class="head-side">Whole bean or ground to order. Roasted in small batches at our Surat roastery, packed within 48 hours, and shipped fresh to your door.</p>
+  </div>
+  <div class="prod-grid" id="beansGrid"></div>
+</section>
+
+<!-- ROAST GUIDE -->
+<section class="roast">
+  <div class="section-head">
+    <p class="eyebrow"><span class="dash"></span> Roast Guide</p>
+    <h2>Find your <em>roast</em>.</h2>
+  </div>
+  <div class="roast-grid">
+    <div class="roast-card">
+      <div class="roast-dot roast-light"></div>
+      <h4>Light</h4>
+      <p class="roast-flavor">Bright · Fruity · Floral</p>
+      <p class="roast-desc">Higher acidity, complex flavors, lighter body. Try with pour-over.</p>
+      <span class="roast-tag">Coming Soon</span>
+    </div>
+    <div class="roast-card active">
+      <div class="roast-dot roast-medium"></div>
+      <h4>Medium</h4>
+      <p class="roast-flavor">Balanced · Sweet · Smooth</p>
+      <p class="roast-desc">The sweet spot. Notes of milk chocolate, peach, and cranberry.</p>
+      <a class="roast-tag link" href="#beans">→ YUHI Blend</a>
+    </div>
+    <div class="roast-card active">
+      <div class="roast-dot roast-dark"></div>
+      <h4>Dark</h4>
+      <p class="roast-flavor">Bold · Rich · Chocolatey</p>
+      <p class="roast-desc">Full body, low acidity. Made for milk drinks and espresso.</p>
+      <a class="roast-tag link" href="#beans">→ YOKO & KIYO</a>
+    </div>
+  </div>
+</section>
+
+<!-- INSTANT -->
+<section class="catalog alt" id="instant">
+  <div class="section-head split">
+    <div>
+      <p class="eyebrow"><span class="dash"></span> 04 — Instant Coffee</p>
+      <h2>Premium. Instantly.</h2>
+    </div>
+    <p class="head-side">Freeze-dried from our signature blend. Bold taste, rich aroma — ready in 30 seconds. Perfect for the office, travel, or sleepy mornings.</p>
+  </div>
+  <div class="prod-grid" id="instantGrid"></div>
+</section>
+
+<!-- COLD BREW -->
+<section class="catalog" id="coldbrew">
+  <div class="section-head split">
+    <div>
+      <p class="eyebrow"><span class="dash"></span> 05 — Cold Brew</p>
+      <h2>Smooth, slow-steeped, ready to pour.</h2>
+    </div>
+    <p class="head-side">Coarsely ground beans, 16 hours of cold water steeping, zero heat. The result: a smoother, naturally sweeter coffee with 67% less acidity. Mix with tonic, milk, or pour over ice.</p>
+  </div>
+  <div class="prod-grid" id="coldGrid"></div>
+</section>
+
+<!-- BREW GUIDE -->
+<section class="brew" id="brew">
+  <div class="section-head">
+    <p class="eyebrow"><span class="dash"></span> 06 — How to Brew</p>
+    <h2>Get the most from <em>every</em> bean.</h2>
+    <p class="lede">Four methods, four moods. Each tested in our Surat studio.</p>
+  </div>
+  <div class="brew-grid">
+    <article class="brew-card">
+      <div class="brew-num">01</div>
+      <h3>French Press</h3>
+      <p class="brew-time">4 min · Full body</p>
+      <ol>
+        <li>30g coarse ground (KIYO Blend works beautifully)</li>
+        <li>500ml water at 93°C</li>
+        <li>Stir, lid on, bloom for 4 minutes</li>
+        <li>Press slowly. Pour. Drink within 5 minutes.</li>
+      </ol>
+    </article>
+    <article class="brew-card">
+      <div class="brew-num">02</div>
+      <h3>Pour Over (V60)</h3>
+      <p class="brew-time">3 min · Clean cup</p>
+      <ol>
+        <li>20g medium-fine ground (try YUHI Blend)</li>
+        <li>Rinse filter, discard water</li>
+        <li>30s bloom with 60ml water</li>
+        <li>Pour in spirals to 320ml total</li>
+      </ol>
+    </article>
+    <article class="brew-card">
+      <div class="brew-num">03</div>
+      <h3>Moka Pot</h3>
+      <p class="brew-time">5 min · Espresso-like</p>
+      <ol>
+        <li>18g fine ground (YOKO Blend recommended)</li>
+        <li>Fill base to safety valve with hot water</li>
+        <li>Medium heat, lid open</li>
+        <li>Pull off heat as soon as it gurgles</li>
+      </ol>
+    </article>
+    <article class="brew-card">
+      <div class="brew-num">04</div>
+      <h3>Cold Brew at Home</h3>
+      <p class="brew-time">16 hrs · Smooth & sweet</p>
+      <ol>
+        <li>100g coarse ground beans</li>
+        <li>1L room-temp filtered water</li>
+        <li>Steep 16 hours in fridge</li>
+        <li>Strain twice. Keeps 7 days chilled.</li>
+      </ol>
+    </article>
+  </div>
+</section>
+
+<!-- WHY FUKU -->
+<section class="why">
+  <div class="section-head">
+    <p class="eyebrow"><span class="dash"></span> 07 — Why FUKU</p>
+    <h2>The details <em>everyone</em> skips.</h2>
+  </div>
+  <div class="why-grid">
+    <div class="why-card">
+      <div class="why-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2v3M12 19v3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M2 12h3M19 12h3M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12"/><circle cx="12" cy="12" r="4"/></svg>
+      </div>
+      <h4>Roasted to order</h4>
+      <p>Every bag is roasted within 48 hours of shipping. You taste coffee the way it was meant to be — not weeks-old supermarket stock.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2 4 6v6c0 5 3.5 9 8 10 4.5-1 8-5 8-10V6l-8-4Z"/><path d="m9 12 2 2 4-4"/></svg>
+      </div>
+      <h4>100% Arabica</h4>
+      <p>Sourced from estates in Chikmagalur and Coorg. No robusta fillers, no shortcuts. Just clean, complex, single-origin beans.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+      </div>
+      <h4>Small-batch only</h4>
+      <p>We roast in batches of under 5kg. Each lot is cupped, scored, and approved by our head roaster before it leaves the studio.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+      </div>
+      <h4>Made in Piplod, Surat</h4>
+      <p>Roasted, packed, and delivered locally from our Piplod roastery. Free within 5 km, hand-delivered fresh — we sign every order.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0Z"/><path d="m9 12 2 2 4-4"/></svg>
+      </div>
+      <h4>Tested by us first</h4>
+      <p>If we wouldn't drink it on a Monday morning, we don't sell it. Every blend goes through 30+ test brews before launch.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M17.5 14.4c-.3-.2-1.8-.9-2-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7 0c-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.7l.5-.5c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.2-.7-1.7-1-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4s-1 1-1 2.4 1 2.8 1.2 3 2 3.1 4.9 4.3c.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.1-.3-.2-.6-.4Z" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 5L2 22l5.2-1.4c1.4.8 3.1 1.2 4.8 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2Z"/></svg>
+      </div>
+      <h4>WhatsApp-first</h4>
+      <p>Order, ask, complain, compliment — all on WhatsApp. We reply in minutes, not hours. No call-center scripts.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SUBSCRIPTION PLANS -->
+<section class="subs" id="subscribe">
+  <div class="section-head">
+    <p class="eyebrow"><span class="dash"></span> Subscribe & Save</p>
+    <h2>Never run out of <em>coffee</em>.</h2>
+    <p class="lede">Auto-delivered, hand-roasted, fresh every time. Pause, change, or cancel anytime — on WhatsApp.</p>
+  </div>
+
+  <div class="subs-grid">
+    <article class="sub-card">
+      <header class="sub-head">
+        <span class="sub-num">01</span>
+        <span class="sub-save">save 10%</span>
+      </header>
+      <h3>Weekly</h3>
+      <p class="sub-freq">1× 250g bag · every 7 days</p>
+      <div class="sub-price">₹450<span>/delivery</span></div>
+      <ul class="sub-perks">
+        <li>✓ Always fresh — roasted the day before delivery</li>
+        <li>✓ Free delivery in 5 km of Piplod</li>
+        <li>✓ Switch blends anytime</li>
+        <li>✓ Pause or cancel on WhatsApp</li>
+      </ul>
+      <button class="sub-btn" data-plan="weekly">Subscribe Weekly →</button>
+    </article>
+
+    <article class="sub-card sub-card-featured">
+      <header class="sub-head">
+        <span class="sub-num">02</span>
+        <span class="sub-save">MOST POPULAR</span>
+      </header>
+      <h3>Bi-Weekly</h3>
+      <p class="sub-freq">1× 250g bag · every 14 days</p>
+      <div class="sub-price">₹500<span>/delivery</span></div>
+      <ul class="sub-perks">
+        <li>✓ The sweet spot for daily drinkers</li>
+        <li>✓ Free delivery in 5 km of Piplod</li>
+        <li>✓ First delivery in 48 hours</li>
+        <li>✓ Pause or cancel on WhatsApp</li>
+      </ul>
+      <button class="sub-btn sub-btn-featured" data-plan="biweekly">Subscribe Bi-Weekly →</button>
+    </article>
+
+    <article class="sub-card">
+      <header class="sub-head">
+        <span class="sub-num">03</span>
+        <span class="sub-save">save 15%</span>
+      </header>
+      <h3>Monthly</h3>
+      <p class="sub-freq">2× 250g bags · every 30 days</p>
+      <div class="sub-price">₹950<span>/delivery</span></div>
+      <ul class="sub-perks">
+        <li>✓ Best for households &amp; offices</li>
+        <li>✓ Free delivery in 5 km of Piplod</li>
+        <li>✓ Mix &amp; match blends</li>
+        <li>✓ Pause or cancel on WhatsApp</li>
+      </ul>
+      <button class="sub-btn" data-plan="monthly">Subscribe Monthly →</button>
+    </article>
+  </div>
+</section>
+
+<!-- STORY -->
+<section class="story" id="story">
+  <div class="story-grid">
+    <div class="story-art">
+      <div class="story-bag bag-yuhi">
+        <div class="bag-top"></div>
+        <div class="bag-body">
+          <span class="bag-blend">YUHI</span>
+          <span class="bag-blend-sub">Blend</span>
+          <span class="bag-fuku">FUKU<small>coffee</small></span>
+          <span class="bag-roast">Medium Roast</span>
+        </div>
+      </div>
+      <div class="story-stamp">EST. SURAT · GUJARAT</div>
+    </div>
+    <div class="story-body">
+      <p class="eyebrow"><span class="dash"></span> 08 — Our Story</p>
+      <h2>FUKU means <em>good fortune</em>.</h2>
+      <p>FUKU Coffee started with a simple, slightly stubborn idea: that India deserved better coffee — beans roasted with care, sold honestly, and delivered fresh. Not stale supermarket bricks. Not overpriced cafe nostalgia. Just good coffee, made with intention.</p>
+      <p>We named our blends after Japanese words for sun, light, and warmth — <strong>YOKO</strong>, <strong>KIYO</strong>, <strong>YUHI</strong> — because that's what a great cup feels like at 7am. From our small roastery in Surat, we roast in batches of 5kg or less, ship within 48 hours, and personally read every WhatsApp message that comes in.</p>
+      <p>Three blends. Two formats. One promise: coffee that feels like good fortune.</p>
+      <div class="story-stats">
+        <div><strong>2,400+</strong><span>five-star ratings</span></div>
+        <div><strong>5 km</strong><span>free-delivery radius</span></div>
+        <div><strong>3</strong><span>signature blends</span></div>
+        <div><strong>1</strong><span>roastery, Piplod</span></div>
+      </div>
+      <a href="#shop" class="btn btn-outline">Shop our story →</a>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="reviews">
+  <div class="section-head">
+    <p class="eyebrow"><span class="dash"></span> 09 — Reviews</p>
+    <h2>1,200+ happy <em>caffeine addicts</em>.</h2>
+  </div>
+  <div class="rev-grid">
+    <article class="rev-card">
+      <div class="rev-stars">★★★★★</div>
+      <p>"YOKO is the only dark roast I've found in India that doesn't taste burnt. Smooth, chocolatey, holds up beautifully with milk. Already on my third bag."</p>
+      <footer><strong>Priya M.</strong><span>Mumbai · Verified Buyer</span></footer>
+    </article>
+    <article class="rev-card">
+      <div class="rev-stars">★★★★★</div>
+      <p>"Honestly didn't expect instant coffee to be this good. I take it on work trips and people keep asking what I'm drinking. The packaging is also gorgeous."</p>
+      <footer><strong>Rohan S.</strong><span>Bengaluru · Verified Buyer</span></footer>
+    </article>
+    <article class="rev-card">
+      <div class="rev-stars">★★★★★</div>
+      <p>"Ordered the Big Combo for a weekend trip and it was a hit. The cold brew + tonic combo is dangerously easy to drink. Will reorder."</p>
+      <footer><strong>Aisha K.</strong><span>Ahmedabad · Verified Buyer</span></footer>
+    </article>
+    <article class="rev-card">
+      <div class="rev-stars">★★★★★</div>
+      <p>"WhatsApp ordering is genius. Sent a message at 11pm, got a reply at 11:02, package arrived day after next. This is how online shopping should work."</p>
+      <footer><strong>Karan D.</strong><span>Surat · Verified Buyer</span></footer>
+    </article>
+    <article class="rev-card">
+      <div class="rev-stars">★★★★★</div>
+      <p>"YUHI has these gorgeous fruit notes — actually tasted the peach and cranberry they describe. Best pour-over coffee I've had at home."</p>
+      <footer><strong>Meera P.</strong><span>Pune · Verified Buyer</span></footer>
+    </article>
+    <article class="rev-card">
+      <div class="rev-stars">★★★★★</div>
+      <p>"I run a small cafe and switched to FUKU beans 4 months ago. Customers genuinely notice the difference. Pricing is fair, delivery is reliable."</p>
+      <footer><strong>Anil R.</strong><span>Vadodara · Wholesale Partner</span></footer>
+    </article>
+  </div>
+</section>
+
+<!-- INSTAGRAM -->
+<section class="ig">
+  <div class="section-head">
+    <p class="eyebrow"><span class="dash"></span> 10 — Instagram</p>
+    <h2>@fukucoffee.in</h2>
+    <p class="lede">Tag us in your morning rituals.</p>
+  </div>
+  <div class="ig-grid">
+    <a href="https://www.instagram.com/fukucoffee.in" target="_blank" class="ig-tile ig-1"><span>↗</span></a>
+    <a href="https://www.instagram.com/fukucoffee.in" target="_blank" class="ig-tile ig-2"><span>↗</span></a>
+    <a href="https://www.instagram.com/fukucoffee.in" target="_blank" class="ig-tile ig-3"><span>↗</span></a>
+    <a href="https://www.instagram.com/fukucoffee.in" target="_blank" class="ig-tile ig-4"><span>↗</span></a>
+    <a href="https://www.instagram.com/fukucoffee.in" target="_blank" class="ig-tile ig-5"><span>↗</span></a>
+    <a href="https://www.instagram.com/fukucoffee.in" target="_blank" class="ig-tile ig-6"><span>↗</span></a>
+  </div>
+  <div class="ig-cta">
+    <a href="https://www.instagram.com/fukucoffee.in" target="_blank" class="btn btn-outline">Follow @fukucoffee.in →</a>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <div class="section-head">
+    <p class="eyebrow"><span class="dash"></span> 11 — FAQ</p>
+    <h2>Things people <em>ask us</em>.</h2>
+  </div>
+  <div class="faq-list" id="faqList">
+    <details>
+      <summary>How fresh are the beans when they arrive?</summary>
+      <p>Every bag is roasted within 48 hours of shipping. We don't keep large inventories. The roast date is printed on the back of every bag.</p>
+    </details>
+    <details>
+      <summary>Whole bean or ground?</summary>
+      <p>Both are available — leave us a note on WhatsApp or in your order. If you want ground, tell us your brew method (French press, pour-over, moka, espresso) and we'll grind accordingly.</p>
+    </details>
+    <details>
+      <summary>How do I store coffee at home?</summary>
+      <p>Airtight container, away from light, heat, and moisture. Skip the fridge — that introduces humidity. Whole beans stay fresh ~3 weeks after roasting; ground coffee, ~2 weeks.</p>
+    </details>
+    <details>
+      <summary>How does WhatsApp ordering work?</summary>
+      <p>Click any "Order on WhatsApp" button, or message <a href="https://wa.me/919574323011">+91 95743 23011</a>. Send us your cart, address, and preferred payment. We confirm, dispatch, and share tracking — usually within an hour.</p>
+    </details>
+    <details>
+      <summary>Where do you deliver?</summary>
+      <p>We currently deliver <strong>only in Surat</strong>. Delivery is <strong>free within a 5 km radius of Piplod</strong> (covers Piplod, Vesu, Citylight, Athwa). Other Surat pincodes: a small ₹50 delivery fee. Outside Surat? Message us on WhatsApp — we can arrange a courier and confirm the cost with you before dispatch.</p>
+    </details>
+    <details>
+      <summary>Do you offer wholesale or cafe partnerships?</summary>
+      <p>Yes. We supply over a dozen independent cafes across Gujarat. Drop us a WhatsApp message with your venue and volume needs — we'll send pricing within the day.</p>
+    </details>
+    <details>
+      <summary>Is your cold brew sweetened?</summary>
+      <p>Never. Just water and coffee — no sugar, no preservatives. Sweetness comes naturally from the slow extraction. Keep refrigerated and consume within 7 days of opening.</p>
+    </details>
+    <details>
+      <summary>What's your return policy?</summary>
+      <p>If a bag arrives damaged or you're unhappy with it, message us within 7 days on WhatsApp. We'll replace or refund — no forms, no fuss.</p>
+    </details>
+  </div>
+</section>
+
+<!-- VISIT / CONTACT -->
+<section class="visit" id="contact">
+  <div class="visit-grid">
+    <div class="visit-info">
+      <p class="eyebrow"><span class="dash"></span> 12 — Contact</p>
+      <h2>Find us in <em>Piplod, Surat</em>.</h2>
+      <p>The roastery is small, busy, and smells incredible. We deliver across Surat — free within a 5 km radius of Piplod, ₹50 for other Surat pincodes.</p>
+      <ul class="visit-list">
+        <li>
+          <span class="vl-label">Location</span>
+          <span class="vl-value">Piplod, Surat 395007</span>
+        </li>
+        <li>
+          <span class="vl-label">Delivery</span>
+          <span class="vl-value">Surat only · Free within 5 km</span>
+        </li>
+        <li>
+          <span class="vl-label">WhatsApp</span>
+          <a class="vl-value link" href="https://wa.me/919574323011" target="_blank">+91 95743 23011 →</a>
+        </li>
+        <li>
+          <span class="vl-label">Phone</span>
+          <a class="vl-value link" href="tel:+919574323011">+91 95743 23011</a>
+        </li>
+        <li>
+          <span class="vl-label">Instagram</span>
+          <a class="vl-value link" href="https://www.instagram.com/fukucoffee.in" target="_blank">@fukucoffee.in →</a>
+        </li>
+        <li>
+          <span class="vl-label">Hours</span>
+          <span class="vl-value">Mon–Sat · 9am — 8pm IST</span>
+        </li>
+      </ul>
+      <div class="visit-ctas">
+        <a href="https://wa.me/919574323011" target="_blank" class="btn btn-wa">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.5 14.4c-.3-.2-1.8-.9-2-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7 0c-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.7l.5-.5c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.2-.7-1.7-1-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4s-1 1-1 2.4 1 2.8 1.2 3 2 3.1 4.9 4.3c.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.1-.3-.2-.6-.4ZM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 5L2 22l5.2-1.4c1.4.8 3.1 1.2 4.8 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2Z"/></svg>
+          Message us
+        </a>
+        <a href="tel:+919574323011" class="btn btn-outline">Call us →</a>
+      </div>
+    </div>
+    <div class="visit-map">
+      <div class="map-fake">
+        <span class="pin"></span>
+        <span class="map-label">FUKU Roastery<br/><small>Piplod, Surat · 5 km free zone</small></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="news">
+  <div class="news-inner">
+    <p class="eyebrow"><span class="dash"></span> Newsletter</p>
+    <h2>Get <em>first dibs</em>.</h2>
+    <p class="news-sub">New blends, restocks, brewing tips, and the occasional discount code. No spam — we're too busy roasting for that.</p>
+    <form class="news-form" id="newsForm">
+      <input type="email" id="newsEmail" placeholder="your@email.com" required />
+      <button type="submit">Subscribe →</button>
+    </form>
+    <p class="news-note" id="newsNote"></p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a href="#top" class="logo logo-footer">
+        <span class="logo-main">FUKU</span>
+        <span class="logo-sub">coffee</span>
+      </a>
+      <p>FUKU Coffee is a small-batch roastery in Piplod, Surat. We roast in small lots, deliver locally, and answer every message ourselves.</p>
+      <div class="socials">
+        <a href="https://www.instagram.com/fukucoffee.in" target="_blank" aria-label="Instagram">Instagram</a>
+        <a href="https://wa.me/919574323011" target="_blank" aria-label="WhatsApp">WhatsApp</a>
+        <a href="mailto:hello@fukucoffee.in" aria-label="Email">Email</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Shop</h4>
+      <a href="#beans">Coffee Beans</a>
+      <a href="#instant">Instant Coffee</a>
+      <a href="#coldbrew">Cold Brew</a>
+      <a href="#shop">Best Sellers</a>
+      <a href="#shop">Combos</a>
+    </div>
+    <div class="footer-col">
+      <h4>Learn</h4>
+      <a href="#brew">Brew Guide</a>
+      <a href="#story">Our Story</a>
+      <a href="#">Roasting Process</a>
+      <a href="#">Wholesale & Cafes</a>
+    </div>
+    <div class="footer-col">
+      <h4>Help</h4>
+      <a href="#contact">Contact</a>
+      <a href="#faq">FAQ</a>
+      <a href="#">Shipping</a>
+      <a href="#">Returns</a>
+      <a href="#">Track Order</a>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <a href="https://wa.me/919574323011" target="_blank">WhatsApp: +91 95743 23011</a>
+      <a href="tel:+919574323011">Phone: +91 95743 23011</a>
+      <a href="https://www.instagram.com/fukucoffee.in" target="_blank">@fukucoffee.in</a>
+      <span class="footer-loc">Surat, Gujarat — India</span>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 FUKU Coffee · Made with ☕ in Surat</span>
+    <div class="footer-legal">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Refund Policy</a>
+    </div>
+    <span class="footer-pay">Pay via UPI · Card · COD · Bank transfer</span>
+  </div>
+  <div class="footer-mega" aria-hidden="true">FUKU<span>coffee</span></div>
+</footer>
+
+<!-- STICKY QUICK-ORDER BAR (mobile) -->
+<div class="quick-bar" id="quickBar" hidden>
+  <div class="qb-product" id="qbProduct">
+    <div class="qb-thumb">☕</div>
+    <div class="qb-info">
+      <strong id="qbName">FUKU Coffee</strong>
+      <span id="qbPrice">Pick a blend in seconds</span>
+    </div>
+  </div>
+  <button class="qb-cta" id="qbCta">Quick Order →</button>
+</div>
+
+<!-- FLOATING WHATSAPP BUTTON -->
+<a href="https://wa.me/919574323011" target="_blank" class="wa-float" aria-label="Order on WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.2-1.8-.9-2-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7 0c-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.7l.5-.5c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.2-.7-1.7-1-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4s-1 1-1 2.4 1 2.8 1.2 3 2 3.1 4.9 4.3c.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.1-.3-.2-.6-.4ZM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 5L2 22l5.2-1.4c1.4.8 3.1 1.2 4.8 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2Z"/></svg>
+  <span class="wa-float-bubble">Order on WhatsApp</span>
+</a>
+
+<!-- CART DRAWER -->
+<div class="overlay" id="overlay"></div>
+<aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
+  <header class="cart-head">
+    <h3>Your Cart <span id="cartCountInline">(0)</span></h3>
+    <button class="cart-close" id="cartClose" aria-label="Close">✕</button>
+  </header>
+  <div class="cart-body" id="cartBody">
+    <div class="cart-empty">
+      <div class="cart-empty-icon">☕</div>
+      <p>Your cart is empty.</p>
+      <button class="btn btn-primary" id="cartShop">Start Shopping</button>
+    </div>
+  </div>
+  <footer class="cart-foot" id="cartFoot" hidden>
+    <div class="cart-line"><span>Subtotal</span><strong id="cartSubtotal">₹0</strong></div>
+    <div class="cart-line muted"><span>Delivery</span><span id="cartShip">Surat only · free within 5 km of Piplod</span></div>
+    <p class="cart-note">Outside Surat? We'll confirm courier &amp; cost on WhatsApp before dispatch.</p>
+    <button class="btn btn-wa btn-block" id="checkoutBtn">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.5 14.4c-.3-.2-1.8-.9-2-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7 0c-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.7l.5-.5c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.2-.7-1.7-1-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4s-1 1-1 2.4 1 2.8 1.2 3 2 3.1 4.9 4.3c.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.1-.3-.2-.6-.4ZM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 5L2 22l5.2-1.4c1.4.8 3.1 1.2 4.8 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2Z"/></svg>
+      Checkout on WhatsApp →
+    </button>
+  </footer>
+</aside>
+
+<!-- CHECKOUT MODAL -->
+<div class="checkout-modal" id="checkoutModal" hidden>
+  <div class="checkout-backdrop" id="checkoutBackdrop"></div>
+  <div class="checkout-card">
+    <header class="checkout-head">
+      <div>
+        <h3>Complete Your Order</h3>
+        <p>Fill in your details — we'll confirm on WhatsApp.</p>
+      </div>
+      <button class="checkout-close" id="checkoutCloseBtn" aria-label="Close">✕</button>
+    </header>
+
+    <div class="checkout-body">
+      <!-- Order summary -->
+      <section class="co-summary" id="coSummary"></section>
+
+      <form id="checkoutForm" class="co-form" novalidate>
+        <div class="co-section">
+          <h4>👤 Your Details</h4>
+          <div class="co-row">
+            <label>
+              <span>Full Name *</span>
+              <input type="text" id="coName" required placeholder="e.g., Aakash Mashruwala" />
+            </label>
+          </div>
+          <div class="co-row co-row-2">
+            <label>
+              <span>Phone *</span>
+              <input type="tel" id="coPhone" required maxlength="10" pattern="[6-9][0-9]{9}" placeholder="10-digit mobile" />
+            </label>
+            <label>
+              <span>Email (optional)</span>
+              <input type="email" id="coEmail" placeholder="for receipts" />
+            </label>
+          </div>
+        </div>
+
+        <div class="co-section">
+          <h4>📍 Delivery Address</h4>
+          <div class="co-row">
+            <label>
+              <span>Full Address *</span>
+              <textarea id="coAddress" rows="3" required placeholder="House/Flat no., Street, Area, Landmark"></textarea>
+            </label>
+          </div>
+          <div class="co-row co-row-2">
+            <label>
+              <span>Pincode *</span>
+              <input type="text" id="coPincode" required maxlength="6" pattern="[0-9]{6}" placeholder="395007" />
+            </label>
+            <div class="co-zone-wrap">
+              <span class="co-zone-label">Delivery Zone</span>
+              <div class="co-zone-pill" id="coZonePill">— enter pincode —</div>
+            </div>
+          </div>
+          <button type="button" class="co-loc-btn" id="coLocBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span>Share My Location (Google Maps)</span>
+          </button>
+          <div class="co-loc-result" id="coLocResult"></div>
+        </div>
+
+        <div class="co-section">
+          <h4>💰 Payment Method</h4>
+          <div class="co-pay-options">
+            <label class="co-pay-opt">
+              <input type="radio" name="coPayment" value="cash" checked />
+              <span class="co-pay-icon">💵</span>
+              <strong>Cash on Delivery</strong>
+              <small>Pay our delivery person</small>
+            </label>
+            <label class="co-pay-opt">
+              <input type="radio" name="coPayment" value="online" />
+              <span class="co-pay-icon">🌐</span>
+              <strong>Online (UPI / Bank)</strong>
+              <small>We'll share details on WhatsApp</small>
+            </label>
+          </div>
+        </div>
+
+        <div class="co-section">
+          <h4>📝 Notes (optional)</h4>
+          <label>
+            <input type="text" id="coNotes" placeholder="Any special instructions for our team?" />
+          </label>
+        </div>
+
+        <div class="co-totals" id="coTotals"></div>
+
+        <button type="submit" class="co-submit" id="coSubmitBtn">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M17.5 14.4c-.3-.2-1.8-.9-2-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7 0c-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.7l.5-.5c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.2-.7-1.7-1-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4s-1 1-1 2.4 1 2.8 1.2 3 2 3.1 4.9 4.3c.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.1-.3-.2-.6-.4ZM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 5L2 22l5.2-1.4c1.4.8 3.1 1.2 4.8 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2Z"/></svg>
+          Place Order on WhatsApp →
+        </button>
+        <p class="co-disclaimer">By placing order, you agree to be contacted on WhatsApp for confirmation &amp; delivery updates.</p>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script src="script.js"></script>
+<script src="chatbot.js"></script>
+<script src="cursor.js"></script>
+</body>
+</html>

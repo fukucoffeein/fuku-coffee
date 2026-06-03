@@ -1,0 +1,16 @@
+# Render.com deployment config — drop this repo in, click "New → Web Service"
+# and Render auto-detects everything.
+services:
+  - type: web
+    name: fuku-coffee
+    runtime: python
+    plan: free
+    buildCommand: ""
+    startCommand: python3 server.py
+    envVars:
+      - key: PORT
+        value: 10000          # Render auto-injects $PORT; server.py respects it
+      - key: PYTHON_VERSION
+        value: "3.11"
+    autoDeploy: true
+    healthCheckPath: /

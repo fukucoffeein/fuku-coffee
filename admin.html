@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FUKU Coffee — Admin Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fraunces:wght@600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+
+<!-- ============ LOGIN SCREEN ============ -->
+<section class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">
+      <span class="logo-main">FUKU</span>
+      <span class="logo-sub">coffee</span>
+    </div>
+    <h2>Admin Portal</h2>
+    <p class="login-sub">Sign in to manage products, stock & orders.</p>
+    <form id="loginForm" autocomplete="off">
+      <label>
+        <span>Username</span>
+        <input type="text" id="loginUser" required autocomplete="username" />
+      </label>
+      <label>
+        <span>Password</span>
+        <input type="password" id="loginPass" required autocomplete="current-password" />
+      </label>
+      <button type="submit" class="btn-primary">Sign In →</button>
+      <div class="login-divider"><span>or</span></div>
+      <button type="button" class="btn-quick" id="quickLoginBtn">⚡ Quick Login as Admin</button>
+      <p class="login-error" id="loginError"></p>
+      <p class="login-hint">Default — <code>admin</code> / <code>fuku2026</code></p>
+    </form>
+  </div>
+  <div class="login-side">
+    <p class="login-side-eyebrow">FUKU COFFEE · ADMIN</p>
+    <h1>Coffee runs on numbers.<br/><em>So does the studio.</em></h1>
+    <p class="login-side-p">Real-time inventory, daily sales graphs, order management, and a chat log of every customer query. Everything you need to keep the roastery humming.</p>
+    <div class="login-side-stats">
+      <div><strong>Real-time</strong><span>Stock levels</span></div>
+      <div><strong>60-day</strong><span>Sales history</span></div>
+      <div><strong>WhatsApp</strong><span>Order pipeline</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ APP SHELL ============ -->
+<div class="app" id="app" hidden>
+
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="logo-main">FUKU</span>
+      <span class="logo-sub">coffee</span>
+    </div>
+    <p class="brand-sub">Admin Portal</p>
+    <nav>
+      <a href="#" class="nav-link active" data-view="dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+        Dashboard
+      </a>
+      <a href="#" class="nav-link" data-view="orders">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 6h15l-2 11H8L6 6Z"/><path d="M6 6 5 3H2"/><circle cx="10" cy="20" r="1.2"/><circle cx="18" cy="20" r="1.2"/></svg>
+        Orders <span class="nav-badge" id="navOrdersBadge"></span>
+      </a>
+      <a href="#" class="nav-link" data-view="stock">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 7 12 3l9 4v10l-9 4-9-4V7Z"/><path d="m3 7 9 4 9-4M12 11v10"/></svg>
+        Stock <span class="nav-badge nav-badge-warn" id="navStockBadge"></span>
+      </a>
+      <a href="#" class="nav-link" data-view="products">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="4" width="7" height="7"/><rect x="13" y="4" width="7" height="7"/><rect x="4" y="13" width="7" height="7"/><rect x="13" y="13" width="7" height="7"/></svg>
+        Products
+      </a>
+      <a href="#" class="nav-link" data-view="team">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="9" cy="8" r="3.5"/><path d="M2 21c0-3.5 3-6 7-6s7 2.5 7 6"/><circle cx="17" cy="6" r="2.5"/><path d="M22 18c0-2.5-2-4-5-4"/></svg>
+        Team
+      </a>
+      <a href="#" class="nav-link" data-view="resellers">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 11 5 15l4 4M15 13l4-4-4-4M5 15h14"/></svg>
+        Resellers
+      </a>
+      <a href="#" class="nav-link" data-view="subscriptions">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 12a9 9 0 1 1-3-6.7M21 3v6h-6"/></svg>
+        Subscriptions
+      </a>
+      <a href="#" class="nav-link" data-view="social">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>
+        Social Planner
+      </a>
+      <a href="#" class="nav-link" data-view="chats">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 12a8 8 0 0 1-12.2 6.8L3 20l1.2-5.8A8 8 0 1 1 21 12Z"/></svg>
+        Chatbot
+      </a>
+      <a href="#" class="nav-link" data-view="reports">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 3v18h18M7 14l4-4 3 3 5-6"/></svg>
+        Reports
+      </a>
+      <a href="#" class="nav-link" data-view="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
+        Settings
+      </a>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="current-user" id="currentUserBox"></div>
+      <a href="/" target="_blank" class="view-store">↗ View storefront</a>
+      <button class="logout-btn" id="logoutBtn">Sign out</button>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <!-- =============== DASHBOARD =============== -->
+    <section class="view active" data-view="dashboard">
+      <header class="page-head">
+        <div>
+          <p class="eyebrow">Overview</p>
+          <h1>Dashboard</h1>
+        </div>
+        <div class="head-actions">
+          <button class="cmdk-trigger" id="cmdkTrigger" title="Search & shortcuts (⌘K)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <span>Search…</span>
+            <kbd>⌘K</kbd>
+          </button>
+          <button class="notif-bell" id="notifBell" title="Notifications">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg>
+            <span class="notif-badge" id="notifBadge"></span>
+          </button>
+          <span class="updated">Last updated <strong id="lastUpdated">—</strong></span>
+          <button class="btn-ghost" id="refreshBtn">↻ Refresh</button>
+        </div>
+      </header>
+
+      <!-- SMART INSIGHTS -->
+      <section class="card insights-card">
+        <header class="card-head">
+          <div>
+            <h3>✨ Smart Insights</h3>
+            <p>Auto-generated observations from your live data</p>
+          </div>
+          <span class="ai-badge">AI ASSIST</span>
+        </header>
+        <div id="insightsList" class="insights-grid"></div>
+      </section>
+
+      <!-- KPI CARDS -->
+      <div class="kpi-grid">
+        <div class="kpi">
+          <p class="kpi-label">Revenue · Today</p>
+          <h3 class="kpi-value" id="kpiTodayRev">—</h3>
+          <p class="kpi-meta"><span id="kpiTodayOrders">—</span> orders</p>
+        </div>
+        <div class="kpi">
+          <p class="kpi-label">Revenue · 7 days</p>
+          <h3 class="kpi-value" id="kpiWeekRev">—</h3>
+          <p class="kpi-meta"><span id="kpiWeekOrders">—</span> orders</p>
+        </div>
+        <div class="kpi">
+          <p class="kpi-label">Revenue · 30 days</p>
+          <h3 class="kpi-value" id="kpiMonthRev">—</h3>
+          <p class="kpi-meta"><span id="kpiMonthOrders">—</span> orders</p>
+        </div>
+        <div class="kpi">
+          <p class="kpi-label">Avg. Order Value</p>
+          <h3 class="kpi-value" id="kpiAOV">—</h3>
+          <p class="kpi-meta">All time</p>
+        </div>
+        <div class="kpi kpi-alt">
+          <p class="kpi-label">Pending Orders</p>
+          <h3 class="kpi-value" id="kpiPending">—</h3>
+          <p class="kpi-meta">Need action</p>
+        </div>
+        <div class="kpi kpi-warn">
+          <p class="kpi-label">Low / Out of Stock</p>
+          <h3 class="kpi-value" id="kpiLow">—</h3>
+          <p class="kpi-meta"><span id="kpiOOS">—</span> out of stock</p>
+        </div>
+      </div>
+
+      <!-- SALES CHART -->
+      <section class="card chart-card">
+        <header class="card-head">
+          <div>
+            <h3>Sales Trend</h3>
+            <p>Revenue over time</p>
+          </div>
+          <div class="tabs" id="salesTabs">
+            <button class="tab active" data-range="daily">Daily (30d)</button>
+            <button class="tab" data-range="weekly">Weekly (12w)</button>
+            <button class="tab" data-range="monthly">Monthly (12m)</button>
+          </div>
+        </header>
+        <div class="chart-wrap"><canvas id="salesChart"></canvas></div>
+      </section>
+
+      <div class="grid-2">
+        <section class="card chart-card">
+          <header class="card-head">
+            <h3>Top Products</h3>
+            <p>Units sold (all time)</p>
+          </header>
+          <div class="chart-wrap"><canvas id="topProductsChart"></canvas></div>
+        </section>
+        <section class="card chart-card">
+          <header class="card-head">
+            <h3>Revenue by Category</h3>
+            <p>Share of sales</p>
+          </header>
+          <div class="chart-wrap"><canvas id="catChart"></canvas></div>
+        </section>
+      </div>
+
+      <section class="card">
+        <header class="card-head">
+          <h3>Recent Orders</h3>
+          <p>Last 10 across all statuses</p>
+        </header>
+        <div class="table-wrap">
+          <table class="data-table" id="recentOrdersTable">
+            <thead>
+              <tr><th>Order</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th>Source</th><th>Date</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+
+    <!-- =============== ORDERS =============== -->
+    <section class="view" data-view="orders">
+      <header class="page-head">
+        <div>
+          <p class="eyebrow">Operations</p>
+          <h1>Orders</h1>
+        </div>
+        <div class="head-actions">
+          <select id="orderFilter">
+            <option value="">All statuses</option>
+            <option value="pending">Pending</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="shipped">Shipped</option>
+            <option value="delivered">Delivered</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+          <button class="btn-ghost" id="refreshOrdersBtn">↻ Refresh</button>
+        </div>
+      </header>
+      <section class="card">
+        <div class="table-wrap">
+          <table class="data-table" id="ordersTable">
+            <thead>
+              <tr><th>Order</th><th>Customer</th><th>Items</th><th>Total</th><th>Payment</th><th>Status</th><th>Source</th><th>Date</th><th></th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+
+    <!-- =============== STOCK =============== -->
+    <section class="view" data-view="stock">
+      <header class="page-head">
+        <div>
+          <p class="eyebrow">Inventory</p>
+          <h1>Stock Management</h1>
+        </div>
+        <div class="head-actions">
+          <button class="btn-primary" id="addStockBtn">+ Add Stock</button>
+          <button class="btn-ghost" id="refreshStockBtn">↻ Refresh</button>
+        </div>
+      </header>
+
+      <div class="grid-3">
+        <section class="card">
+          <header class="card-head"><h3>Low / Out of Stock</h3><p>Reorder priority</p></header>
+          <div id="lowStockList" class="low-list"></div>
+        </section>
+        <section class="card">
+          <header class="card-head"><h3>Expiring Soon</h3><p>Within 14 days</p></header>
+          <div id="expiringList" class="low-list"></div>
+        </section>
+        <section class="card">
+          <header class="card-head"><h3>Recent Movements</h3><p>Last 15 stock changes</p></header>
+          <div id="stockLogList" class="stock-log"></div>
+        </section>
+      </div>
+
+      <section class="card">
+        <header class="card-head">
+          <h3>All Products · Stock</h3>
+          <p>Inline edit price & stock. Next-expiry shows the earliest batch.</p>
+        </header>
+        <div class="table-wrap">
+          <table class="data-table" id="stockTable">
+            <thead>
+              <tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Validity</th><th>Next Expiry</th><th>Quick Adjust</th><th>Status</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card">
+        <header class="card-head">
+          <h3>Stock Batches</h3>
+          <p>Every stock addition logged with batch & expiry date</p>
+        </header>
+        <div class="table-wrap">
+          <table class="data-table" id="batchesTable">
+            <thead>
+              <tr><th>Batch</th><th>Product</th><th>Qty Added</th><th>Batch Date</th><th>Expiry</th><th>Days Left</th><th>Notes</th><th>Added</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+
+    <!-- =============== PRODUCTS =============== -->
+    <section class="view" data-view="products">
+      <header class="page-head">
+        <div>
+          <p class="eyebrow">Catalog</p>
+          <h1>Products</h1>
+        </div>
+        <div class="head-actions">
+          <button class="btn-ghost" id="refreshProductsBtn">↻ Refresh</button>
+        </div>
+      </header>
+      <section class="card">
+        <header class="card-head">
+          <h3>All Products</h3>
+          <p>Click a thumbnail to upload a new photo · click "Edit" to change name, price, description, badge.</p>
+        </header>
+        <div class="table-wrap">
+          <table class="data-table" id="productsTable">
+            <thead>
+              <tr><th style="width:80px">Photo</th><th>Product</th><th>Category</th><th>Price</th><th>Was</th><th>Stock</th><th>Bestseller</th><th>Active</th><th></th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+
+    <!-- =============== TEAM =============== -->
+    <section class="view" data-view="team">
+      <header class="page-head">
+        <div>
+          <p class="eyebrow">People</p>
+          <h1>Team</h1>
+        </div>
+        <div class="head-actions">
+          <button class="btn-ghost" id="refreshTeamBtn">↻ Refresh</button>
+        </div>
+      </header>
+      <div id="teamGrid" class="team-grid"></div>
+
+      <section class="card" style="margin-top:24px">
+        <header class="card-head">
+          <h3>Team Performance</h3>
+          <p>Orders entered, coffee handled, payments confirmed</p>
+        </header>
+        <div class="table-wrap">
+          <table class="data-table" id="teamTable">
+            <thead>
+              <tr><th>Member</th><th>Role</th><th>Orders Entered</th><th>Revenue Booked</th><th>Coffee Handled</th><th>Payments Confirmed</th><th>₹ Collected</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+
+    <!-- =============== RESELLERS =============== -->
+    <section class="view" data-view="resellers">
+      <header class="page-head">
+        <div>
+          <p class="eyebrow">Partners</p>
+          <h1>Resellers</h1>
+        </div>
+        <div class="head-actions">
+          <button class="btn-primary super-only" id="newResellerBtn">+ Add Reseller</button>
+          <button class="btn-ghost" id="refreshResellersBtn">↻ Refresh</button>
+        </div>
+      </header>
+
+      <section class="card">
+        <header class="card-head">
+          <h3>How it works</h3>
+          <p>Give a reseller a unique code. Share their link. Every order through that link is credited to them and they get a WhatsApp notification automatically.</p>
+        </header>
+        <div class="super-only-notice">🛡️ Only the <strong>Super Admin (Aakash)</strong> can add or edit resellers. You can view their stats and copy share links.</div>
+      </section>
+
+      <section class="card">
+        <header class="card-head"><h3>Active Resellers</h3><p>Click "Share" to copy their link</p></header>
+        <div class="table-wrap">
+          <table class="data-table" id="resellersTable">
+            <thead>
+              <tr><th>Code</th><th>Name</th><th>City</th><th>Phone</th><th>Comm. %</th><th>Orders</th><th>Revenue</th><th>₹ Owed</th><th>Share Link</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+
+    <!-- =============== SUBSCRIPTIONS =============== -->
+    <section class="view" data-view="subscriptions">
+      <header class="page-head">
+        <div>
+          <p class="eyebrow">Recurring</p>
+          <h1>Subscriptions</h1>
+        </div>
+        <div class="head-actions">
+          <button class="btn-ghost" id="refreshSubsBtn">↻ Refresh</button>
+        </div>
+      </header>
+      <section class="card">
+        <div class="table-wrap">
+          <table class="data-table" id="subsTable">
+            <thead>
+              <tr><th>ID</th><th>Plan</th><th>Customer</th><th>Phone</th><th>Next Delivery</th><th>Status</th><th>Created</th><th>Notes</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+
+    <!-- =============== SOCIAL PLANNER =============== -->
+    <section class="view" data-view="social">
+      <header class="page-head">
+        <div>
+          <p class="eyebrow">Marketing</p>
+          <h1>Social Planner</h1>
+        </div>
+        <div class="head-actions">
+          <button class="btn-ghost" id="socialPrevMonth">◀</button>
+          <strong class="social-month-label" id="socialMonthLabel">—</strong>
+          <button class="btn-ghost" id="socialNextMonth">▶</button>
+          <button class="btn-ghost" id="socialTodayBtn">This Month</button>
+          <button class="btn-primary" id="newPostBtn">+ Plan Post</button>
+        </div>
+      </header>
+
+      <!-- KPI strip -->
+      <div class="kpi-grid" id="socialKpis"></div>
+
+      <!-- Calendar grid + upcoming list -->
+      <div class="social-grid">
+        <section class="card social-cal-card">
+          <header class="card-head">
+            <h3 id="socialCalTitle">Month</h3>
+            <p>Click any day to plan a new post</p>
+          </header>
+          <div class="social-cal" id="socialCal"></div>
+        </section>
+
+        <section class="card social-upcoming">
+          <header class="card-head">
+            <h3>Upcoming &amp; Drafts</h3>
+            <p>Click any post to edit / record performance</p>
+          </header>
+          <div id="socialUpcomingList"></div>
+        </section>
+      </div>
+
+      <!-- Performance by partner -->
+      <section class="card">
+        <header class="card-head">
+          <h3>Partner Performance</h3>
+          <p>Reach, engagement &amp; spend across @iamsuratcity, @foodie pages, and our own channel</p>
+        </header>
+        <div class="table-wrap">
+          <table class="data-table" id="socialPartnerTable">
+            <thead>
+              <tr><th>Partner</th><th>Posts</th><th>Reach</th><th>Likes</th><th>Comments</th><th>Spend</th><th>Cost / 1k reach</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Partner directory -->
+      <section class="card">
+        <header class="card-head">
+          <h3>Partner Pages</h3>
+          <p>Influencer / aggregator pages you can run promotions on</p>
+        </header>
+        <div id="socialPartnersList" class="partners-grid"></div>
+      </section>
+    </section>
+
+    <!-- =============== CHATBOT =============== -->
+    <section class="view" data-view="chats">
+      <header class="page-head">
+        <div>
+          <p class="eyebrow">Customer Service</p>
+          <h1>Chatbot Activity</h1>
+        </div>
+        <div class="head-actions">
+          <button class="btn-ghost" id="refreshChatsBtn">↻ Refresh</button>
+        </div>
+      </header>
+
+      <div class="grid-2">
+        <section class="card">
+          <header class="card-head"><h3>Top Intents</h3><p>What customers ask about</p></header>
+          <div class="chart-wrap"><canvas id="intentChart"></canvas></div>
+        </section>
+        <section class="card">
+          <header class="card-head"><h3>Chats Stats</h3><p>Bot performance</p></header>
+          <div id="chatStats" class="chat-stats"></div>
+        </section>
+      </div>
+
+      <section class="card">
+        <header class="card-head">
+          <h3>Recent Conversations</h3>
+          <p>Last 50 user messages and bot replies</p>
+        </header>
+        <div id="chatLogList" class="chat-log"></div>
+      </section>
+    </section>
+
+    <!-- =============== REPORTS =============== -->
+    <section class="view" data-view="reports">
+      <header class="page-head">
+        <div>
+          <p class="eyebrow">Analytics</p>
+          <h1>Reports</h1>
+        </div>
+        <div class="head-actions">
+          <button class="btn-ghost" id="exportDailyCsv">Export Daily CSV</button>
+          <button class="btn-ghost" id="exportOrdersCsv">Export Orders CSV</button>
+        </div>
+      </header>
+
+      <section class="card chart-card">
+        <header class="card-head"><h3>Daily Revenue · 90 days</h3></header>
+        <div class="chart-wrap chart-tall"><canvas id="report90"></canvas></div>
+      </section>
+
+      <section class="card chart-card">
+        <header class="card-head"><h3>Daily Orders · 30 days</h3></header>
+        <div class="chart-wrap"><canvas id="reportOrders30"></canvas></div>
+      </section>
+
+      <section class="card chart-card">
+        <header class="card-head"><h3>Units sold per day · 30 days</h3></header>
+        <div class="chart-wrap"><canvas id="reportUnits30"></canvas></div>
+      </section>
+    </section>
+
+    <!-- =============== SETTINGS =============== -->
+    <section class="view" data-view="settings">
+      <header class="page-head">
+        <div>
+          <p class="eyebrow">Account</p>
+          <h1>Settings</h1>
+        </div>
+      </header>
+
+      <div class="grid-2">
+        <section class="card">
+          <header class="card-head"><h3>Signed in as</h3><p>Your current session</p></header>
+          <div id="settingsMe" class="settings-me"></div>
+        </section>
+        <section class="card">
+          <header class="card-head"><h3>Backend Accounts</h3><p>Team members who can log in</p></header>
+          <div id="settingsAccounts" class="settings-accounts"></div>
+          <p class="settings-note">To change passwords, edit the <code>USERS</code> block at the top of <code>server.py</code> and restart.</p>
+        </section>
+      </div>
+
+      <section class="card danger-card super-only">
+        <header class="card-head">
+          <h3>⚠️ Danger Zone — Go Live</h3>
+          <p>Use these to clear demo data and start using FUKU for real orders. This cannot be undone.</p>
+        </header>
+
+        <div class="danger-row">
+          <div class="danger-info">
+            <strong>Clear orders &amp; chats</strong>
+            <span>Deletes all orders and chatbot logs. Keeps products and current stock levels.</span>
+          </div>
+          <button class="danger-btn" id="resetTxnBtn">Clear Orders &amp; Chats</button>
+        </div>
+
+        <div class="danger-row">
+          <div class="danger-info">
+            <strong>Full reset — Go Live 🚀</strong>
+            <span>Deletes all orders, chats, stock batches &amp; history, and sets every product's stock to 0. Then add your real stock via Stock → Add Stock.</span>
+          </div>
+          <button class="danger-btn danger-btn-strong" id="resetFullBtn">Full Reset &amp; Go Live</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <header class="card-head"><h3>Permissions</h3></header>
+        <div class="super-only-notice" style="margin-bottom:14px">🛡️ You're a standard admin. The <strong>Super Admin (Aakash)</strong> handles destructive actions: full reset, resellers, partner investments &amp; equity, products.</div>
+        <ul class="perms-list">
+          <li>✅ View dashboard, sales reports, charts</li>
+          <li>✅ Manage stock — add batches, adjust, edit</li>
+          <li>✅ Manage orders — view, edit, update status</li>
+          <li>✅ Confirm payments (Nisarg)</li>
+          <li>✅ Manage subscriptions</li>
+          <li>✅ View team, chatbot logs, resellers</li>
+          <li class="super-only">🛡️ <strong>Super only:</strong> add/edit resellers</li>
+          <li class="super-only">🛡️ <strong>Super only:</strong> edit partner investments &amp; equity</li>
+          <li class="super-only">🛡️ <strong>Super only:</strong> create/delete products</li>
+          <li class="super-only">🛡️ <strong>Super only:</strong> reset / wipe data</li>
+        </ul>
+      </section>
+    </section>
+
+  </main>
+</div>
+
+<!-- ============ ADD STOCK MODAL ============ -->
+<div class="modal" id="stockModal" hidden>
+  <div class="modal-backdrop"></div>
+  <div class="modal-card">
+    <header class="modal-head">
+      <h3>Add Stock Batch</h3>
+      <button class="modal-close" id="stockModalClose">✕</button>
+    </header>
+    <form class="modal-body" id="addStockForm">
+      <div class="form-row">
+        <label>Product</label>
+        <select id="addStockProduct" required></select>
+        <small id="addStockValidity" class="form-hint">—</small>
+      </div>
+      <div class="form-row">
+        <label>Quantity to Add</label>
+        <input type="number" id="addStockQty" min="1" value="50" required />
+      </div>
+      <div class="form-row">
+        <label>Batch Date (when produced/roasted)</label>
+        <input type="date" id="addStockDate" required />
+        <small class="form-hint" id="addStockExpiry">Expires on —</small>
+      </div>
+      <div class="form-row">
+        <label>Notes (optional)</label>
+        <input type="text" id="addStockNotes" placeholder="e.g., morning roast batch, supplier name…" />
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn-ghost" id="addStockCancel">Cancel</button>
+        <button type="submit" class="btn-primary-modal">Add Batch →</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ SOCIAL POST MODAL ============ -->
+<div class="modal" id="socialModal" hidden>
+  <div class="modal-backdrop"></div>
+  <div class="modal-card modal-card-wide">
+    <header class="modal-head">
+      <h3 id="socialModalTitle">Plan a Post</h3>
+      <button class="modal-close" id="socialModalClose">✕</button>
+    </header>
+    <form class="modal-body" id="socialPostForm">
+      <input type="hidden" id="spId" />
+      <div class="form-row form-row-two">
+        <div>
+          <label>Title / Concept *</label>
+          <input type="text" id="spTitle" required placeholder="e.g. Cold-brew Friday teaser" />
+        </div>
+        <div>
+          <label>Content Type *</label>
+          <select id="spType" required>
+            <option value="post">📷 Feed Post</option>
+            <option value="story">📱 Story (24h)</option>
+            <option value="reel">🎬 Reel</option>
+            <option value="promotion">📣 Paid Promotion</option>
+            <option value="collab">🤝 Collab / Partner Post</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row form-row-two">
+        <div>
+          <label>Platform</label>
+          <select id="spPlatform">
+            <option value="instagram">Instagram</option>
+            <option value="facebook">Facebook</option>
+            <option value="whatsapp">WhatsApp Status</option>
+            <option value="youtube">YouTube Short</option>
+          </select>
+        </div>
+        <div>
+          <label>Partner Page <small>(if collab / promotion)</small></label>
+          <select id="spPartner">
+            <option value="">— our own page —</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row form-row-two">
+        <div>
+          <label>Scheduled Date *</label>
+          <input type="date" id="spDate" required />
+        </div>
+        <div>
+          <label>Time (optional)</label>
+          <input type="time" id="spTime" />
+        </div>
+      </div>
+      <div class="form-row form-row-two">
+        <div>
+          <label>Assigned To</label>
+          <select id="spAssignee">
+            <option value="">— unassigned —</option>
+          </select>
+        </div>
+        <div>
+          <label>Promotion Cost (₹)</label>
+          <input type="number" id="spCost" min="0" value="0" />
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Caption</label>
+        <textarea id="spCaption" rows="3" placeholder="Final caption with line breaks…"></textarea>
+      </div>
+      <div class="form-row">
+        <label>Hashtags</label>
+        <input type="text" id="spHashtags" placeholder="#fukucoffee #surat #coldbrew" />
+      </div>
+      <div class="form-row">
+        <label>Media Notes</label>
+        <input type="text" id="spMedia" placeholder="What needs to be shot? Who's the model?" />
+      </div>
+
+      <!-- Performance block (collapsed unless status = posted) -->
+      <div class="sp-perf" id="spPerf" hidden>
+        <h4>📊 Performance (after posting)</h4>
+        <div class="form-row form-row-two">
+          <div>
+            <label>Live Post URL</label>
+            <input type="text" id="spUrl" placeholder="https://www.instagram.com/p/..." />
+          </div>
+          <div>
+            <label>Posted At</label>
+            <input type="datetime-local" id="spPostedAt" />
+          </div>
+        </div>
+        <div class="form-row form-row-perf">
+          <label><span>Reach</span><input type="number" id="spReach" min="0" value="0" /></label>
+          <label><span>Likes</span><input type="number" id="spLikes" min="0" value="0" /></label>
+          <label><span>Comments</span><input type="number" id="spComments" min="0" value="0" /></label>
+          <label><span>Shares</span><input type="number" id="spShares" min="0" value="0" /></label>
+          <label><span>Saves</span><input type="number" id="spSaves" min="0" value="0" /></label>
+          <label><span>Link clicks</span><input type="number" id="spClicks" min="0" value="0" /></label>
+        </div>
+      </div>
+
+      <div class="form-row form-row-two">
+        <div>
+          <label>Status</label>
+          <select id="spStatus">
+            <option value="draft">📝 Draft</option>
+            <option value="scheduled" selected>📅 Scheduled</option>
+            <option value="posted">✅ Posted</option>
+            <option value="cancelled">✕ Cancelled</option>
+          </select>
+        </div>
+        <div>
+          <label>Notes</label>
+          <input type="text" id="spNotes" />
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-ghost" id="spDeleteBtn" hidden style="margin-right:auto;color:var(--red);border-color:var(--red-bg)">🗑 Delete</button>
+        <button type="button" class="btn-ghost" id="spCancelBtn">Cancel</button>
+        <button type="submit" class="btn-primary-modal">Save Post →</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ PRODUCT EDIT MODAL (photo + details) ============ -->
+<div class="modal" id="productModal" hidden>
+  <div class="modal-backdrop"></div>
+  <div class="modal-card modal-card-wide">
+    <header class="modal-head">
+      <h3 id="productModalTitle">Edit Product</h3>
+      <button class="modal-close" id="productModalClose">✕</button>
+    </header>
+    <form class="modal-body" id="productEditForm">
+      <input type="hidden" id="pmId" />
+
+      <!-- Photo block — drop / click to upload -->
+      <div class="pm-photo-block">
+        <div class="pm-photo-preview" id="pmPhotoPreview">
+          <img id="pmPhotoImg" alt="" />
+          <div class="pm-photo-empty">No photo yet</div>
+        </div>
+        <div class="pm-photo-actions">
+          <label class="btn-primary-modal pm-upload-label">
+            📷 Choose Photo
+            <input type="file" id="pmPhotoFile" accept="image/jpeg,image/png,image/webp" hidden />
+          </label>
+          <button type="button" class="btn-ghost" id="pmPhotoSaveBtn" hidden>↑ Upload & Save</button>
+          <small id="pmPhotoHint">JPG / PNG / WebP · max 6 MB · ideal 1000×1000</small>
+        </div>
+      </div>
+
+      <div class="form-row form-row-two">
+        <div>
+          <label>Name *</label>
+          <input type="text" id="pmName" required />
+        </div>
+        <div>
+          <label>Category</label>
+          <select id="pmCat">
+            <option value="beans">Coffee Beans</option>
+            <option value="instant">Instant Coffee</option>
+            <option value="coldbrew">Cold Brew</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row form-row-two">
+        <div>
+          <label>Short label <small>(used on bag art)</small></label>
+          <input type="text" id="pmShort" />
+        </div>
+        <div>
+          <label>Sub-label</label>
+          <input type="text" id="pmSub" />
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Description</label>
+        <textarea id="pmDesc" rows="3"></textarea>
+      </div>
+      <div class="form-row form-row-two">
+        <div>
+          <label>Price (₹) *</label>
+          <input type="number" id="pmPrice" min="0" required />
+        </div>
+        <div>
+          <label>Was Price (₹) <small>(strikethrough)</small></label>
+          <input type="number" id="pmWas" min="0" />
+        </div>
+      </div>
+      <div class="form-row form-row-two">
+        <div>
+          <label>Roast / Tag</label>
+          <input type="text" id="pmRoast" />
+        </div>
+        <div>
+          <label>Badge <small>(e.g. BEST SELLER, NEW)</small></label>
+          <input type="text" id="pmBadge" />
+        </div>
+      </div>
+      <div class="form-row form-row-two">
+        <div>
+          <label>Stock</label>
+          <input type="number" id="pmStock" min="0" />
+        </div>
+        <div>
+          <label>Validity (days)</label>
+          <input type="number" id="pmValidity" min="1" />
+        </div>
+      </div>
+      <div class="form-row form-row-two">
+        <div>
+          <label class="form-toggle">
+            <input type="checkbox" id="pmBestseller" />
+            <span>⭐ Mark as Bestseller</span>
+          </label>
+        </div>
+        <div>
+          <label class="form-toggle">
+            <input type="checkbox" id="pmActive" checked />
+            <span>✓ Active (visible on storefront)</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-ghost" id="pmCancelBtn">Cancel</button>
+        <button type="submit" class="btn-primary-modal">Save Changes →</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ ADD RESELLER MODAL ============ -->
+<div class="modal" id="resellerModal" hidden>
+  <div class="modal-backdrop"></div>
+  <div class="modal-card">
+    <header class="modal-head">
+      <h3>Add Reseller</h3>
+      <button class="modal-close" id="resellerModalClose">✕</button>
+    </header>
+    <form class="modal-body" id="addResellerForm">
+      <div class="form-row">
+        <label>Ref Code <small>(A-Z 0-9 - · used in their link)</small></label>
+        <input type="text" id="rsRefCode" required pattern="[A-Z0-9\-]{3,20}" placeholder="e.g. SULAY-MUM" maxlength="20" />
+      </div>
+      <div class="form-row form-row-two">
+        <div>
+          <label>Name *</label>
+          <input type="text" id="rsName" required placeholder="e.g. Sulay Patel" />
+        </div>
+        <div>
+          <label>City</label>
+          <input type="text" id="rsCity" placeholder="e.g. Mumbai" />
+        </div>
+      </div>
+      <div class="form-row form-row-two">
+        <div>
+          <label>WhatsApp Phone * <small>(10 digits)</small></label>
+          <input type="tel" id="rsPhone" required pattern="[6-9][0-9]{9}" placeholder="9876543210" />
+        </div>
+        <div>
+          <label>Commission % *</label>
+          <input type="number" id="rsComm" required value="10" min="0" max="50" step="0.5" />
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Notes</label>
+        <input type="text" id="rsNotes" placeholder="e.g. friend of Aakash, handles Mumbai west" />
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn-ghost" id="rsCancel">Cancel</button>
+        <button type="submit" class="btn-primary-modal">Create Reseller →</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ ORDER MODAL ============ -->
+<div class="modal" id="orderModal" hidden>
+  <div class="modal-backdrop"></div>
+  <div class="modal-card">
+    <header class="modal-head">
+      <h3 id="orderModalTitle">Order details</h3>
+      <button class="modal-close" id="orderModalClose">✕</button>
+    </header>
+    <div class="modal-body" id="orderModalBody"></div>
+  </div>
+</div>
+
+<!-- ============ NOTIFICATIONS DROPDOWN ============ -->
+<div class="notif-pop" id="notifPop" hidden>
+  <header class="notif-pop-head">
+    <strong>Notifications</strong>
+    <span id="notifCount">0 items</span>
+  </header>
+  <div id="notifList" class="notif-list"></div>
+</div>
+
+<!-- ============ COMMAND PALETTE ============ -->
+<div class="cmdk" id="cmdk" hidden>
+  <div class="cmdk-backdrop" id="cmdkBackdrop"></div>
+  <div class="cmdk-panel">
+    <div class="cmdk-search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input type="text" id="cmdkInput" placeholder="Search orders, products, resellers — or type a command…" />
+      <kbd>ESC</kbd>
+    </div>
+    <div class="cmdk-results" id="cmdkResults"></div>
+  </div>
+</div>
+
+<!-- ============ INVOICE / RECEIPT MODAL ============ -->
+<div class="modal" id="invoiceModal" hidden>
+  <div class="modal-backdrop"></div>
+  <div class="modal-card modal-card-wide">
+    <header class="modal-head no-print">
+      <h3>Order Receipt</h3>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="btn-ghost" id="invoicePrintBtn">🖨️ Print / PDF</button>
+        <button class="modal-close" id="invoiceModalClose">✕</button>
+      </div>
+    </header>
+    <div class="modal-body" id="invoiceBody"></div>
+  </div>
+</div>
+
+<!-- ============ TOAST ============ -->
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>
