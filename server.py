@@ -886,6 +886,22 @@ class Handler(BaseHTTPRequestHandler):
         p = url.path
         qs = urllib.parse.parse_qs(url.query)
 
+        if p == '/api/_health':
+            # Diagnostic — env vars + db type
+            try:
+                conn = db()
+                db_type = type(conn).__name__
+            except Exception as e:
+                db_type = f'ERROR: {e}'
+            return self._json({
+                'turso_url_set':  bool(os.environ.get('TURSO_DATABASE_URL', '').strip()),
+                'turso_token_set': bool(os.environ.get('TURSO_AUTH_TOKEN', '').strip()),
+                'turso_url_starts': os.environ.get('TURSO_DATABASE_URL', '')[:30],
+                'fuku_secret_set': bool(os.environ.get('FUKU_SECRET', '').strip()),
+                'db_type':        db_type,
+                'env_keys':       sorted([k for k in os.environ.keys() if 'TURSO' in k or 'FUKU' in k]),
+            })
+
         if p == '/api/products':
             return self._json(self.list_products())
         if p.startswith('/api/products/'):
