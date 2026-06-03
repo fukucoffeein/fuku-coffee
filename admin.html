@@ -33,7 +33,7 @@
       <div class="login-divider"><span>or</span></div>
       <button type="button" class="btn-quick" id="quickLoginBtn">⚡ Quick Login as Admin</button>
       <p class="login-error" id="loginError"></p>
-      <p class="login-hint">Default — <code>admin</code> / <code>fuku2026</code></p>
+      <p class="login-hint">5 logins: <code>aakash</code> · <code>vihang</code> · <code>nisarg</code> · <code>chilman</code> · <code>sulay</code> — each password is the capitalised name + <code>@2026</code></p>
     </form>
   </div>
   <div class="login-side">
@@ -105,7 +105,7 @@
     </nav>
     <div class="sidebar-foot">
       <div class="current-user" id="currentUserBox"></div>
-      <a href="/" target="_blank" class="view-store">↗ View storefront</a>
+      <a href="/" target="_blank" class="view-store" rel="noopener noreferrer">↗ View storefront</a>
       <button class="logout-btn" id="logoutBtn">Sign out</button>
     </div>
   </aside>
@@ -470,30 +470,6 @@
         </section>
       </div>
 
-      <!-- Performance by partner -->
-      <section class="card">
-        <header class="card-head">
-          <h3>Partner Performance</h3>
-          <p>Reach, engagement &amp; spend across @iamsuratcity, @foodie pages, and our own channel</p>
-        </header>
-        <div class="table-wrap">
-          <table class="data-table" id="socialPartnerTable">
-            <thead>
-              <tr><th>Partner</th><th>Posts</th><th>Reach</th><th>Likes</th><th>Comments</th><th>Spend</th><th>Cost / 1k reach</th></tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- Partner directory -->
-      <section class="card">
-        <header class="card-head">
-          <h3>Partner Pages</h3>
-          <p>Influencer / aggregator pages you can run promotions on</p>
-        </header>
-        <div id="socialPartnersList" class="partners-grid"></div>
-      </section>
     </section>
 
     <!-- =============== CHATBOT =============== -->
@@ -694,10 +670,8 @@
           </select>
         </div>
         <div>
-          <label>Partner Page <small>(if collab / promotion)</small></label>
-          <select id="spPartner">
-            <option value="">— our own page —</option>
-          </select>
+          <label>Partner Page <small>(optional — @handle if collab/promo)</small></label>
+          <input type="text" id="spPartner" placeholder="e.g. @iamsuratcity" />
         </div>
       </div>
       <div class="form-row form-row-two">

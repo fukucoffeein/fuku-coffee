@@ -40,16 +40,16 @@ PORT       = int(os.environ.get('PORT', 8765))
 # BACKEND ACCOUNTS — change passwords here
 # ============================================
 USERS = {
-    'aakash':  {'password': 'Aakash@2026',  'name': 'Aakash',  'role': 'Operations & Management',
-                'is_super': True},
-    'vihang':  {'password': 'Vihang@2026',  'name': 'Vihang',  'role': 'Coffee — Production & Quality',
-                'is_super': False},
-    'nisarg':  {'password': 'Nisarg@2026',  'name': 'Nisarg',  'role': 'Payments & Finance',
-                'is_super': False},
-    'chilman': {'password': 'Chilman@2026', 'name': 'Chilman', 'role': 'Operations & Marketing',
-                'is_super': False},
-    'sulay':   {'password': 'Sulay@2026',   'name': 'Sulay',   'role': 'Strategist & Business Advisor',
-                'is_super': False},
+    'aakash':  {'password': os.environ.get('FUKU_PASS_AAKASH',  'Aakash@2026'),
+                'name': 'Aakash',  'role': 'Operations & Management',          'is_super': True},
+    'vihang':  {'password': os.environ.get('FUKU_PASS_VIHANG',  'Vihang@2026'),
+                'name': 'Vihang',  'role': 'Coffee — Production & Quality',    'is_super': False},
+    'nisarg':  {'password': os.environ.get('FUKU_PASS_NISARG',  'Nisarg@2026'),
+                'name': 'Nisarg',  'role': 'Payments & Finance',               'is_super': False},
+    'chilman': {'password': os.environ.get('FUKU_PASS_CHILMAN', 'Chilman@2026'),
+                'name': 'Chilman', 'role': 'Operations & Marketing',           'is_super': False},
+    'sulay':   {'password': os.environ.get('FUKU_PASS_SULAY',   'Sulay@2026'),
+                'name': 'Sulay',   'role': 'Strategist & Business Advisor',    'is_super': False},
 }
 SECRET     = os.environ.get('FUKU_SECRET', 'fuku-secret-2026-change-me')
 TOKEN_TTL  = 30 * 24 * 3600   # 30 days
@@ -92,6 +92,68 @@ DEFAULT_TEAM = [
          is_coffee_handler=0, phone='', email=''),
 ]
 
+DEFAULT_PRODUCTS = [
+    # COFFEE BEANS
+    dict(id='yoko-1kg', cat='beans', name='YOKO Blend — 1 Kg', short='YOKO', sub='Blend',
+         description='Dark Roast · Notes of Dark Chocolate, Oak & Vanilla. Full-bodied with low acidity — built for espresso and milk drinks.',
+         price=2400, was=3200, roast='Dark Roast', type='bag', bag_color='yoko',
+         badge='BEST SELLER', bestseller=1, stock=45, validity_days=60, sort_order=1),
+    dict(id='yoko-250g', cat='beans', name='YOKO Blend — 250 g', short='YOKO', sub='Blend',
+         description='Dark Roast · Notes of Dark Chocolate, Oak & Vanilla. Perfect starter size for the curious palate.',
+         price=600, was=800, roast='Dark Roast', type='bag', bag_color='yoko',
+         badge='', bestseller=1, stock=120, validity_days=60, sort_order=2),
+    dict(id='kiyo-1kg', cat='beans', name='KIYO Blend — 1 Kg', short='KIYO', sub='Blend',
+         description='Dark Roast · Notes of Dark Chocolate, Roasted Almond & Light Caramel. Nutty, smooth, deeply satisfying.',
+         price=2400, was=3200, roast='Dark Roast', type='bag', bag_color='kiyo',
+         badge='', bestseller=0, stock=32, validity_days=60, sort_order=3),
+    dict(id='kiyo-250g', cat='beans', name='KIYO Blend — 250 g', short='KIYO', sub='Blend',
+         description='Dark Roast · Notes of Dark Chocolate, Roasted Almond & Light Caramel. The everyday dark roast.',
+         price=600, was=800, roast='Dark Roast', type='bag', bag_color='kiyo',
+         badge='', bestseller=1, stock=98, validity_days=60, sort_order=4),
+    dict(id='yuhi-1kg', cat='beans', name='YUHI Blend — 1 Kg', short='YUHI', sub='Blend',
+         description='Medium Roast · Notes of Milk Chocolate, Peach, Cranberry & Roasted Nuts. Bright, balanced, beautiful in pour-over.',
+         price=2000, was=2800, roast='Medium Roast', type='bag', bag_color='yuhi',
+         badge='STAFF PICK', bestseller=0, stock=8, validity_days=60, sort_order=5),
+    dict(id='yuhi-250g', cat='beans', name='YUHI Blend — 250 g', short='YUHI', sub='Blend',
+         description='Medium Roast · Notes of Milk Chocolate, Peach, Cranberry & Roasted Nuts. The friendly daily driver.',
+         price=500, was=700, roast='Medium Roast', type='bag', bag_color='yuhi',
+         badge='', bestseller=1, stock=140, validity_days=60, sort_order=6),
+    # INSTANT
+    dict(id='instant-250g', cat='instant', name='FUKU Instant Coffee — 250 g', short='INSTANT', sub='Premium',
+         description='Premium Quality · Bold Taste · Rich Aroma. Freeze-dried from our signature blend — ready in 30 seconds.',
+         price=500, was=690, roast='Freeze-Dried', type='bag', bag_color='kiyo',
+         badge='NEW', bestseller=0, stock=85, validity_days=365, sort_order=7),
+    dict(id='instant-1kg', cat='instant', name='FUKU Instant Coffee — 1 Kg', short='INSTANT', sub='Bulk',
+         description='Best Quality · 1Kg pack. For offices, families, and serial sippers. Stays fresh for 12 months sealed.',
+         price=2000, was=3000, roast='Freeze-Dried', type='bag', bag_color='kiyo',
+         badge='SAVE BIG', bestseller=0, stock=22, validity_days=365, sort_order=8),
+    # COLD BREW
+    dict(id='cb-200', cat='coldbrew', name='Classic Cold Brew — 200 ml', short='Cold Brew',
+         description='Brewed to perfection. 16-hour cold steep. Smooth, naturally sweet, never bitter. Single serve.',
+         price=100, was=150, type='bottle', label='COLD<br/>BREW',
+         badge='', bestseller=0, stock=180, validity_days=10, sort_order=9),
+    dict(id='cb-1l', cat='coldbrew', name='Classic Cold Brew — 1 Litre', short='Cold Brew',
+         description="Your daily dose. 1-litre bottle — that's 5 servings of pure, slow-brewed iced coffee. Refrigerate after opening.",
+         price=500, was=650, type='bottle', label='COLD<br/>BREW 1L',
+         badge='', bestseller=1, stock=64, validity_days=10, sort_order=10),
+    dict(id='combo-1', cat='coldbrew', name='Combo 1 — Cold Brew + Tonic', short='Combo 1',
+         description='200ml Cold Brew + 1 Tonic Water · 2 servings. The classic refresher — pour, stir, serve over ice.',
+         price=160, was=200, type='combo', combo_items=['bottle','tonic'],
+         badge='', bestseller=0, stock=55, validity_days=10, sort_order=11),
+    dict(id='combo-2', cat='coldbrew', name='Combo 2 — Cold Brew + Tonic + Lemon', short='Combo 2',
+         description='200ml Cold Brew + 1 Tonic + FUKU Lemon Powder · 2 servings. A zesty twist on the classic.',
+         price=210, was=250, type='combo', combo_items=['bottle','tonic','jar'],
+         badge='', bestseller=0, stock=42, validity_days=10, sort_order=12),
+    dict(id='combo-big', cat='coldbrew', name='Big Combo — 10 Servings', short='Big Combo',
+         description='1L Cold Brew + 5 Tonic + FUKU Lime Powder · 10 servings. Best value for sharing weekends.',
+         price=1000, was=1200, type='combo', combo_items=['bottle','tonic','jar'],
+         badge='BEST VALUE', bestseller=1, stock=18, validity_days=10, sort_order=13),
+    dict(id='lime-powder', cat='coldbrew', name='Lime Gucchi Powder', short='Lime Powder',
+         description='12g · 2 servings · 6g each. The secret ingredient for your cold brew. Zesty, refreshing, all natural.',
+         price=50, was=100, type='powder',
+         badge='', bestseller=0, stock=210, validity_days=180, sort_order=14),
+]
+
 DEFAULT_SOCIAL_PARTNERS = [
     dict(handle='@iamsuratcity',     platform='instagram', category='city',     followers=850000, typical_cost=3500, notes='Top Surat aggregator'),
     dict(handle='@foodie_surat',     platform='instagram', category='foodie',   followers=410000, typical_cost=2500, notes='Food-focused, high engagement'),
@@ -105,27 +167,122 @@ DEFAULT_SOCIAL_PARTNERS = [
 # ============================================
 # DATABASE
 # ============================================
+# ============================================
+# TURSO HTTP CLIENT — sqlite3-API-compatible wrapper
+# Built from scratch using stdlib urllib so it works on Vercel serverless.
+# ============================================
+class TursoRow:
+    """sqlite3.Row-like: index OR column-name access, dict()-convertible."""
+    def __init__(self, cols, values):
+        self._cols = cols
+        self._values = values
+        self._map = {c: i for i, c in enumerate(cols)}
+    def __getitem__(self, key):
+        if isinstance(key, int): return self._values[key]
+        return self._values[self._map[key]]
+    def __contains__(self, key): return key in self._map
+    def keys(self): return list(self._cols)
+    def __iter__(self): return iter(self._values)
+    def __len__(self): return len(self._values)
+    def get(self, key, default=None):
+        return self._values[self._map[key]] if key in self._map else default
+
+class TursoCursor:
+    def __init__(self):
+        self._rows = []
+        self.lastrowid = None
+        self.rowcount = 0
+    def fetchone(self):
+        return self._rows.pop(0) if self._rows else None
+    def fetchall(self):
+        rs = self._rows; self._rows = []; return rs
+    def __iter__(self): return iter(self._rows)
+
+class TursoConnection:
+    def __init__(self, url, token):
+        host = url.replace('libsql://', 'https://').rstrip('/')
+        self._endpoint = host + '/v2/pipeline'
+        self._token = token
+        self.row_factory = None
+
+    def _arg(self, v):
+        if v is None: return {"type": "null"}
+        if isinstance(v, bool):   return {"type": "integer", "value": "1" if v else "0"}
+        if isinstance(v, int):    return {"type": "integer", "value": str(v)}
+        if isinstance(v, float):  return {"type": "float",   "value": v}
+        if isinstance(v, (bytes, bytearray)):
+            import base64
+            return {"type": "blob", "base64": base64.b64encode(v).decode()}
+        return {"type": "text", "value": str(v)}
+
+    def _parse(self, v):
+        if v is None: return None
+        t = v.get('type')
+        if t == 'null':    return None
+        if t == 'integer': return int(v.get('value'))
+        if t == 'float':   return float(v.get('value'))
+        if t == 'blob':
+            import base64
+            return base64.b64decode(v.get('base64',''))
+        return v.get('value')
+
+    def _post(self, requests_list):
+        body = json.dumps({"requests": requests_list + [{"type": "close"}]}).encode()
+        req = urllib.request.Request(
+            self._endpoint, data=body, method='POST',
+            headers={'Authorization': f'Bearer {self._token}', 'Content-Type': 'application/json'}
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=20) as r:
+                return json.loads(r.read())
+        except urllib.error.HTTPError as e:
+            raise sqlite3.OperationalError(f"Turso HTTP {e.code}: {e.read().decode('utf-8','ignore')[:300]}")
+
+    def execute(self, sql, params=()):
+        if not isinstance(params, (list, tuple)): params = (params,)
+        data = self._post([{"type": "execute",
+                            "stmt": {"sql": sql, "args": [self._arg(p) for p in params]}}])
+        first = data['results'][0]
+        if first.get('type') != 'ok':
+            err = first.get('error', {}).get('message', str(first))
+            raise sqlite3.OperationalError(f"Turso: {err} · SQL: {sql[:200]}")
+        resp = first['response']['result']
+        cur = TursoCursor()
+        cols = [c['name'] for c in resp.get('cols', [])]
+        cur._rows = [TursoRow(cols, [self._parse(v) for v in row]) for row in resp.get('rows', [])]
+        cur.rowcount = resp.get('affected_row_count', 0)
+        lri = resp.get('last_insert_rowid')
+        cur.lastrowid = int(lri) if lri not in (None, '') else None
+        return cur
+
+    def executescript(self, sql):
+        """Run multi-statement SQL — naive split on ; (fine for our schema)."""
+        stmts = [s.strip() for s in sql.split(';') if s.strip()]
+        if not stmts: return
+        reqs = [{"type": "execute", "stmt": {"sql": s, "args": []}} for s in stmts]
+        data = self._post(reqs)
+        for r in data['results'][:-1]:    # skip the 'close'
+            if r.get('type') != 'ok':
+                # Suppress 'duplicate column' migration errors — caller may already handle them
+                emsg = str(r.get('error', r))
+                raise sqlite3.OperationalError(f"Turso script: {emsg[:200]}")
+
+    def commit(self):    pass    # auto-commit per request
+    def rollback(self):  pass
+    def close(self):     pass
+    def __enter__(self): return self
+    def __exit__(self, *a): self.close()
+
+
 def db():
     """Open a DB connection.
-       - If TURSO_DATABASE_URL is set (Vercel / production), uses libsql-experimental
-         to sync with Turso cloud (sqlite3-compatible API).
+       - If TURSO_DATABASE_URL env var is set (Vercel / production), uses the HTTP-based
+         Turso client above (works in serverless functions, no embedded library needed).
        - Otherwise falls back to local SQLite (dev / VPS).
     """
     turso_url = os.environ.get('TURSO_DATABASE_URL', '').strip()
     if turso_url:
-        try:
-            import libsql_experimental as libsql
-            conn = libsql.connect(
-                '/tmp/fuku-local.db',
-                sync_url=turso_url,
-                auth_token=os.environ.get('TURSO_AUTH_TOKEN', ''),
-            )
-            conn.sync()
-            conn.row_factory = sqlite3.Row
-            conn.execute('PRAGMA foreign_keys = ON')
-            return conn
-        except Exception as e:
-            print(f'[fuku] Turso connect failed → falling back to local SQLite: {e}')
+        return TursoConnection(turso_url, os.environ.get('TURSO_AUTH_TOKEN', ''))
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     conn.execute('PRAGMA foreign_keys = ON')
@@ -364,15 +521,25 @@ def init_db():
             except sqlite3.OperationalError:
                 pass
 
-        # Seed default Surat social partners — only if empty
-        if c.execute('SELECT COUNT(*) AS c FROM social_partners').fetchone()['c'] == 0:
-            for sp in DEFAULT_SOCIAL_PARTNERS:
+        # Seed products if table is empty (first Vercel cold start)
+        if c.execute('SELECT COUNT(*) AS c FROM products').fetchone()['c'] == 0:
+            for p in DEFAULT_PRODUCTS:
                 c.execute('''
-                    INSERT INTO social_partners (handle, platform, category, followers,
-                                                  typical_cost, notes)
-                    VALUES (?,?,?,?,?,?)
-                ''', (sp['handle'], sp.get('platform','instagram'), sp.get('category'),
-                      sp.get('followers'), sp.get('typical_cost', 0), sp.get('notes','')))
+                    INSERT INTO products (id, cat, name, short, sub, description, price, was,
+                                          roast, type, bag_color, label, combo_items, badge,
+                                          bestseller, stock, validity_days, sort_order, image_url)
+                    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                ''', (
+                    p['id'], p['cat'], p['name'], p.get('short',''), p.get('sub',''),
+                    p['description'], p['price'], p.get('was', 0),
+                    p.get('roast',''), p.get('type','bag'), p.get('bag_color',''),
+                    p.get('label',''), json.dumps(p.get('combo_items') or []),
+                    p.get('badge',''), p.get('bestseller', 0),
+                    p.get('stock', 0), p.get('validity_days', 60),
+                    p.get('sort_order', 0), f"/products/{p['id']}.jpg",
+                ))
+
+        # (Removed: default social-partner seeding — no fake placeholder data)
 
         # Seed / sync default team — adds any missing members without touching existing ones
         for tm in DEFAULT_TEAM:

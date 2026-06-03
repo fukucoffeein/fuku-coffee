@@ -271,7 +271,7 @@
     <div class="chat-body" id="chatBody"></div>
     <div class="chat-quick" id="chatQuick"></div>
     <form class="chat-input-bar" id="chatForm">
-      <input type="text" id="chatInput" placeholder="Type a message..." autocomplete="off" />
+      <input type="text" id="chatInput" aria-label="Type your message to FUKU assistant" placeholder="Type a message..." autocomplete="off" />
       <button type="submit" class="send-btn" aria-label="Send">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 21 23 12 2 3v7l15 2-15 2v7Z"/></svg>
       </button>

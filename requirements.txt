@@ -1,3 +1,3 @@
 # FUKU Coffee uses ONLY Python stdlib — no pip dependencies needed.
-# This file exists so deployment platforms (Render / Railway / etc.)
-# detect the project as Python and skip the install step cleanly.
+# Turso cloud DB is accessed via a custom HTTP client in server.py (no pip install).
+

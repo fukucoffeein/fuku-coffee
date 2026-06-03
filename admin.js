@@ -124,8 +124,8 @@ document.querySelector('#loginForm button[type="submit"]').addEventListener('cli
 
 // One-click quick login
 document.getElementById('quickLoginBtn').addEventListener('click', () => {
-  document.getElementById('loginUser').value = 'admin';
-  document.getElementById('loginPass').value = 'fuku2026';
+  document.getElementById('loginUser').value = 'aakash';
+  document.getElementById('loginPass').value = 'Aakash@2026';
   doLogin();
 });
 
@@ -1251,13 +1251,11 @@ function shiftMonth(ym, delta) {
 }
 
 async function loadSocial() {
-  // partners + analytics in parallel
-  const [partners, analytics, cal] = await Promise.all([
-    api('/api/admin/social/partners'),
+  const [analytics, cal] = await Promise.all([
     api('/api/admin/social/analytics'),
     api('/api/admin/social/calendar?month=' + SOCIAL_MONTH),
   ]);
-  SOCIAL_PARTNERS = partners;
+  SOCIAL_PARTNERS = [];
 
   // KPIs
   const t = analytics.totals || {};
@@ -1275,36 +1273,6 @@ async function loadSocial() {
   document.getElementById('socialCalTitle').textContent = monthLabel(SOCIAL_MONTH);
   renderCalendar(cal);
 
-  // Partner performance
-  const tbody = document.querySelector('#socialPartnerTable tbody');
-  tbody.innerHTML = analytics.by_partner.length ? analytics.by_partner.map(p => {
-    const cpm = p.reach ? INR(Math.round(p.spend * 1000 / p.reach)) : '—';
-    return `<tr>
-      <td><strong>${p.partner}</strong></td>
-      <td class="num">${intf(p.posts)}</td>
-      <td class="num">${intf(p.reach)}</td>
-      <td class="num">${intf(p.likes)}</td>
-      <td class="num">${intf(p.comments)}</td>
-      <td class="num">${INR(p.spend)}</td>
-      <td class="num">${cpm}</td>
-    </tr>`;
-  }).join('') : `<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--ink-3)">No posted content yet. Mark a planned post as "Posted" to track performance.</td></tr>`;
-
-  // Partner directory
-  const dir = document.getElementById('socialPartnersList');
-  dir.innerHTML = partners.map(p => `
-    <article class="partner-card partner-cat-${(p.category||'').toLowerCase()}">
-      <header>
-        <strong>${p.handle}</strong>
-        <span class="partner-cat">${p.category || ''}</span>
-      </header>
-      <div class="partner-stats">
-        <div><strong>${(p.followers || 0).toLocaleString('en-IN')}</strong><span>followers</span></div>
-        <div><strong>${p.typical_cost ? INR(p.typical_cost) : 'Free'}</strong><span>typical cost</span></div>
-      </div>
-      ${p.notes ? `<p class="partner-notes">${p.notes}</p>` : ''}
-    </article>
-  `).join('');
 }
 
 function renderCalendar(cal) {
@@ -1381,10 +1349,7 @@ function openSocialModal(post, defaultDate) {
   const isEdit = !!post;
   document.getElementById('socialModalTitle').textContent = isEdit ? `Edit Post — ${post.title}` : 'Plan a Post';
 
-  // Populate partner select
-  const partnerSel = document.getElementById('spPartner');
-  partnerSel.innerHTML = '<option value="">— our own page —</option>'
-    + SOCIAL_PARTNERS.map(p => `<option value="${p.handle}">${p.handle} · ${p.category || ''} · ${(p.followers||0).toLocaleString('en-IN')}f</option>`).join('');
+  // Partner field is now a free-text input (no preset partners)
 
   // Populate assignee
   const assigneeSel = document.getElementById('spAssignee');

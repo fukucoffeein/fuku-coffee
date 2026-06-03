@@ -599,7 +599,7 @@ h2 em { font-style: italic; font-weight: 400; color: var(--purple-700); }
 
 .hero-meta { display: none; }
 
-@media (max-width: 900px) {
+@media (max-width: 720px) {
   .hero { grid-template-columns: 1fr; padding-top: 50px; gap: 30px; }
   .hero-trust { grid-template-columns: repeat(2, 1fr); gap: 18px; }
   .hero-bag { width: 260px; }
@@ -810,7 +810,7 @@ h2 em { font-style: italic; font-weight: 400; color: var(--purple-700); }
   letter-spacing: 0.04em;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 720px) {
   .cat-grid { grid-template-columns: 1fr; }
 }
 
@@ -1174,7 +1174,7 @@ h2 em { font-style: italic; font-weight: 400; color: var(--purple-700); }
 }
 .roast-tag.link { color: var(--purple-700); }
 
-@media (max-width: 900px) {
+@media (max-width: 720px) {
   .roast-grid { grid-template-columns: 1fr; }
 }
 
@@ -1313,7 +1313,7 @@ h2 em { font-style: italic; font-weight: 400; color: var(--purple-700); }
   line-height: 1.6;
 }
 
-@media (max-width: 900px) { .why-grid { grid-template-columns: 1fr; } }
+@media (max-width: 720px) { .why-grid { grid-template-columns: 1fr; } }
 
 /* ============================================
    STORY
@@ -1394,7 +1394,7 @@ h2 em { font-style: italic; font-weight: 400; color: var(--purple-700); }
 }
 .story-stats span { font-size: 12px; color: var(--ink-3); }
 
-@media (max-width: 900px) {
+@media (max-width: 720px) {
   .story-grid { grid-template-columns: 1fr; gap: 40px; }
   .story-art { padding: 60px 30px; min-height: 460px; }
   .story-stats { grid-template-columns: repeat(2, 1fr); }
@@ -1436,7 +1436,7 @@ h2 em { font-style: italic; font-weight: 400; color: var(--purple-700); }
 .rev-card footer strong { font-size: 14px; font-weight: 700; color: var(--ink); }
 .rev-card footer span { font-size: 12px; color: var(--ink-3); }
 
-@media (max-width: 900px) { .rev-grid { grid-template-columns: 1fr; } }
+@media (max-width: 720px) { .rev-grid { grid-template-columns: 1fr; } }
 
 /* ============================================
    INSTAGRAM
@@ -1669,7 +1669,7 @@ h2 em { font-style: italic; font-weight: 400; color: var(--purple-700); }
   letter-spacing: 0.04em;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 720px) {
   .visit-grid { grid-template-columns: 1fr; }
   .visit-map { height: 360px; }
 }
@@ -2152,7 +2152,7 @@ h2 em { font-style: italic; font-weight: 400; color: var(--purple-700); }
   grid-template-columns: repeat(3, 1fr);
   gap: 22px;
 }
-@media (max-width: 900px) { .subs-grid { grid-template-columns: 1fr; } }
+@media (max-width: 720px) { .subs-grid { grid-template-columns: 1fr; } }
 
 .sub-card {
   background: #fff;
@@ -2330,9 +2330,118 @@ h2 em { font-style: italic; font-weight: 400; color: var(--purple-700); }
 .qb-cta:hover { background: #128C7E; }
 
 @media (max-width: 700px) { .quick-bar { display: flex; } }
-/* Add bottom space so cart drawer footer / chatbot don't get hidden */
+/* ============================================
+   MOBILE FIXES (≤ 700px)
+   ============================================ */
 @media (max-width: 700px) {
-  .wa-float, .chat-fab { bottom: 80px !important; }
+  /* Stack floating CTAs above the quick-order bar */
+  .wa-float, .chat-fab { bottom: 84px !important; }
+
+  /* Hide the redundant wa-float on mobile — chat-fab + quick-bar cover both jobs.
+     The wa-float button just clones the hero "Order on WhatsApp" CTA — kill it on small screens. */
+  .wa-float { display: none !important; }
+
+  /* Shrink chat-fab into a compact pill on small screens
+     so it doesn't crash into hero text or product cards */
+  .chat-fab {
+    padding: 6px 14px 6px 6px !important;
+    box-shadow: 0 8px 20px rgba(74,26,142,.4) !important;
+  }
+  .chat-fab-icon { width: 34px !important; height: 34px !important; }
+  .chat-fab-icon svg { width: 18px !important; height: 18px !important; }
+  .chat-fab-text strong { font-size: 12.5px !important; }
+  .chat-fab-text small { display: none !important; }
+  .chat-fab .chat-fab-badge {
+    top: -3px !important; right: -3px !important;
+    width: 18px !important; height: 18px !important; font-size: 9.5px !important;
+  }
+
+  /* Reseller banner — slim down */
+  .reseller-banner {
+    padding: 8px 14px !important;
+    font-size: 11.5px !important;
+    line-height: 1.35 !important;
+    gap: 8px !important;
+  }
+  .rb-icon { font-size: 15px !important; }
+  .rb-meta { display: none !important; }     /* hide the trailing explanation on phones */
+  .rb-close {
+    width: 36px !important; height: 36px !important;
+    font-size: 16px !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Announce marquee — start with padding so first word isn't cut */
+  .announce {
+    font-size: 11px !important;
+  }
+  .announce-track { padding-left: 100vw !important; }
+
+  /* Touch-target hardening — Apple recommends ≥ 44px tap area */
+  .wa-btn-nav {
+    padding: 11px 14px !important;
+    min-height: 42px !important;
+    min-width: 42px !important;
+  }
+  .footer-col a, .footer-col span {
+    padding: 8px 0 !important;
+    min-height: 36px !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+  .visit-list .vl-value.link {
+    padding: 6px 0 !important;
+    min-height: 40px !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+  .roast-tag.link {
+    padding: 10px 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    min-height: 40px !important;
+  }
+  .icon-btn { width: 44px !important; height: 44px !important; }
+  .nav-links.open a {
+    padding: 12px 0 !important;
+    font-size: 15px !important;
+    min-height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  /* Hero CTAs — give the buttons more breathing room and let them
+     fall above the floating chat-fab cleanly */
+  .hero-cta {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+  }
+  .hero-cta .btn { width: 100% !important; }
+  .hero {
+    padding-bottom: 40px !important;
+  }
+
+  /* The chat panel pops up above the quick-bar properly */
+  .chat-panel { bottom: 150px !important; height: calc(100vh - 230px) !important; }
+
+  /* Hero subtitle / paragraph — slightly smaller for less wrap */
+  .hero-sub { font-size: 15.5px !important; line-height: 1.55 !important; }
+  .hero-title { font-size: clamp(40px, 11vw, 56px) !important; }
+
+  /* Section heads — reduce wasted top padding */
+  .section-head { padding-top: 50px !important; padding-bottom: 28px !important; }
+  .section-head h2 { font-size: clamp(30px, 8vw, 42px) !important; }
+}
+
+/* Very narrow phones (≤ 380px) — slimmer chrome */
+@media (max-width: 380px) {
+  .nav-inner { padding: 14px 5vw !important; gap: 12px !important; }
+  .logo-main { font-size: 22px !important; }
+  .logo-sub { font-size: 14px !important; margin-left: 14px !important; }
+  .wa-btn-nav { padding: 9px 11px !important; }
+  .wa-btn-nav span { display: none !important; }
+  .icon-btn { width: 38px !important; height: 38px !important; }
 }
 
 /* ============================================

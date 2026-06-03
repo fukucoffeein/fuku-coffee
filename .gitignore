@@ -1,0 +1,8 @@
+.env
+*.pyc
+__pycache__/
+fuku.db
+fuku.db-journal
+.DS_Store
+node_modules/
+*.log
