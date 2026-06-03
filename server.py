@@ -51,10 +51,10 @@ USERS = {
     'sulay':   {'password': 'Sulay@2026',   'name': 'Sulay',   'role': 'Strategist & Business Advisor',
                 'is_super': False},
 }
-SECRET     = 'fuku-secret-2026-change-me'
+SECRET     = os.environ.get('FUKU_SECRET', 'fuku-secret-2026-change-me')
+TOKEN_TTL  = 30 * 24 * 3600   # 30 days
 
-VALID_TOKENS = {}   # token -> username
-DB_LOCK      = Lock()
+DB_LOCK = Lock()
 
 WA_NUMBER  = '919574323011'
 
@@ -106,6 +106,26 @@ DEFAULT_SOCIAL_PARTNERS = [
 # DATABASE
 # ============================================
 def db():
+    """Open a DB connection.
+       - If TURSO_DATABASE_URL is set (Vercel / production), uses libsql-experimental
+         to sync with Turso cloud (sqlite3-compatible API).
+       - Otherwise falls back to local SQLite (dev / VPS).
+    """
+    turso_url = os.environ.get('TURSO_DATABASE_URL', '').strip()
+    if turso_url:
+        try:
+            import libsql_experimental as libsql
+            conn = libsql.connect(
+                '/tmp/fuku-local.db',
+                sync_url=turso_url,
+                auth_token=os.environ.get('TURSO_AUTH_TOKEN', ''),
+            )
+            conn.sync()
+            conn.row_factory = sqlite3.Row
+            conn.execute('PRAGMA foreign_keys = ON')
+            return conn
+        except Exception as e:
+            print(f'[fuku] Turso connect failed → falling back to local SQLite: {e}')
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     conn.execute('PRAGMA foreign_keys = ON')
@@ -366,15 +386,45 @@ def init_db():
 # ============================================
 # AUTH
 # ============================================
-def make_token():
-    return secrets.token_urlsafe(32)
+def make_token(username):
+    """Stateless signed token: <base64-payload>.<hmac-sig>
+       Works across serverless invocations — no shared memory needed."""
+    import base64, json, time
+    payload = {'u': username, 't': int(time.time())}
+    payload_b64 = base64.urlsafe_b64encode(json.dumps(payload).encode()).decode().rstrip('=')
+    sig = hashlib.sha256((payload_b64 + SECRET).encode()).hexdigest()[:32]
+    return f'{payload_b64}.{sig}'
+
+def verify_token(token):
+    """Return username if token is valid + unexpired, else None."""
+    import base64, json, time
+    try:
+        payload_b64, sig = token.rsplit('.', 1)
+        expected_sig = hashlib.sha256((payload_b64 + SECRET).encode()).hexdigest()[:32]
+        if not hmac_eq(sig, expected_sig):
+            return None
+        padded = payload_b64 + '=' * (-len(payload_b64) % 4)
+        payload = json.loads(base64.urlsafe_b64decode(padded))
+        if time.time() - payload['t'] > TOKEN_TTL:
+            return None
+        return payload['u']
+    except Exception:
+        return None
+
+def hmac_eq(a, b):
+    """Constant-time string compare (avoids timing leaks)."""
+    if len(a) != len(b): return False
+    out = 0
+    for x, y in zip(a, b):
+        out |= ord(x) ^ ord(y)
+    return out == 0
 
 def current_user(handler):
     """Return the username tied to the request's Bearer token, or None."""
     auth = handler.headers.get('Authorization', '')
     if auth.startswith('Bearer '):
         token = auth[7:].strip()
-        return VALID_TOKENS.get(token)
+        return verify_token(token)
     return None
 
 def is_authed(handler):
@@ -929,8 +979,7 @@ class Handler(BaseHTTPRequestHandler):
         p = body.get('password', '')
         user = USERS.get(u)
         if user and user['password'] == p:
-            token = make_token()
-            VALID_TOKENS[token] = u
+            token = make_token(u)
             return self._json({
                 'token': token, 'username': u,
                 'name': user['name'], 'role': user['role'],
