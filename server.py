@@ -245,14 +245,18 @@ class TursoConnection:
         first = data['results'][0]
         if first.get('type') != 'ok':
             err = first.get('error', {}).get('message', str(first))
-            raise sqlite3.OperationalError(f"Turso: {err} · SQL: {sql[:200]}")
+            print(f"[turso] SQL ERROR: {err}\n  SQL: {sql[:300]}\n  PARAMS: {params}")
+            raise sqlite3.OperationalError(f"Turso: {err}")
         resp = first['response']['result']
         cur = TursoCursor()
         cols = [c['name'] for c in resp.get('cols', [])]
         cur._rows = [TursoRow(cols, [self._parse(v) for v in row]) for row in resp.get('rows', [])]
-        cur.rowcount = resp.get('affected_row_count', 0)
+        cur.rowcount = resp.get('affected_row_count', 0) or 0
         lri = resp.get('last_insert_rowid')
-        cur.lastrowid = int(lri) if lri not in (None, '') else None
+        try:
+            cur.lastrowid = int(lri) if lri not in (None, '') else None
+        except (ValueError, TypeError):
+            cur.lastrowid = None
         return cur
 
     def executescript(self, sql):
@@ -1020,6 +1024,16 @@ class Handler(BaseHTTPRequestHandler):
 
     # ----- POST -----
     def do_POST(self):
+        try:
+            return self._do_POST_inner()
+        except Exception as e:
+            import traceback
+            tb = traceback.format_exc()
+            print(f"[fuku] POST {self.path} crashed:\n{tb}")
+            try: self._err(f'Server error: {type(e).__name__}: {str(e)[:200]}', 500)
+            except Exception: pass
+
+    def _do_POST_inner(self):
         url = urllib.parse.urlparse(self.path)
         p = url.path
         body = self._read_body()
