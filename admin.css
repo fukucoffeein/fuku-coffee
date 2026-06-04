@@ -95,17 +95,16 @@ svg { display:block; }
 
 /* Sidebar logo image */
 .sidebar-logo {
-  height: 42px;
+  height: 60px;
   width: auto;
   display: block;
   object-fit: contain;
-  /* White logo on dark sidebar — already white, just brighten slightly */
   filter: brightness(10) contrast(0.95);
 }
 
 /* Login page logo */
 .login-logo-img {
-  height: 64px;
+  height: 90px;
   width: auto;
   display: block;
   margin-bottom: 4px;

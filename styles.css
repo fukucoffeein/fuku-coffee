@@ -197,7 +197,7 @@ h2 em { font-style: italic; font-weight: 400; color: var(--purple-700); }
   flex-shrink: 0;
 }
 .logo-img {
-  height: 44px;
+  height: 64px;
   width: auto;
   display: block;
   object-fit: contain;
@@ -1777,9 +1777,8 @@ h2 em { font-style: italic; font-weight: 400; color: var(--purple-700); }
   max-width: 340px;
 }
 .logo-footer .logo-img {
-  height: 52px;
-  /* White logo is already white, perfect for dark footer */
-  filter: brightness(10);   /* fallback if purple version used */
+  height: 80px;
+  filter: brightness(10);
 }
 .socials { display: flex; gap: 14px; flex-wrap: wrap; }
 .socials a {
