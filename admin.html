@@ -72,6 +72,10 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="4" width="7" height="7"/><rect x="13" y="4" width="7" height="7"/><rect x="4" y="13" width="7" height="7"/><rect x="13" y="13" width="7" height="7"/></svg>
         Products
       </a>
+      <a href="#" class="nav-link" data-view="accounts">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        Accounts
+      </a>
       <a href="#" class="nav-link" data-view="team">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="9" cy="8" r="3.5"/><path d="M2 21c0-3.5 3-6 7-6s7 2.5 7 6"/><circle cx="17" cy="6" r="2.5"/><path d="M22 18c0-2.5-2-4-5-4"/></svg>
         Team
@@ -338,6 +342,95 @@
             <thead>
               <tr><th style="width:80px">Photo</th><th>Product</th><th>Category</th><th>Price</th><th>Was</th><th>Stock</th><th>Bestseller</th><th>Active</th><th></th></tr>
             </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+
+    <!-- =============== ACCOUNTS =============== -->
+    <section class="view" data-view="accounts">
+      <header class="page-head">
+        <div>
+          <p class="eyebrow">Finance</p>
+          <h1>Accounts</h1>
+        </div>
+        <div class="head-actions">
+          <button class="btn-ghost" id="refreshAccountsBtn">↻ Refresh</button>
+        </div>
+      </header>
+
+      <!-- Vyapar Connection Card -->
+      <section class="card vyapar-card">
+        <div class="vyapar-brand">
+          <div class="vyapar-logo">V</div>
+          <div>
+            <h3>Vyapar Billing</h3>
+            <p>Your GST billing & invoicing — powered by Vyapar</p>
+          </div>
+          <a href="https://vyaparapp.in/vyapar/billing-invoice/7KM612KPVP"
+             target="_blank" rel="noopener noreferrer"
+             class="btn-primary-modal vyapar-open-btn">
+            Open Vyapar ↗
+          </a>
+        </div>
+        <div class="vyapar-actions">
+          <div class="vyapar-action-group">
+            <h4>Export to Vyapar</h4>
+            <p>Download sales data in Vyapar's CSV import format — import directly into Sales → Import.</p>
+            <div class="vyapar-export-row">
+              <label>From <input type="date" id="vExportFrom" /></label>
+              <label>To   <input type="date" id="vExportTo" /></label>
+              <button class="btn-primary-modal" id="vExportBtn">⬇ Download CSV</button>
+            </div>
+          </div>
+          <div class="vyapar-action-group">
+            <h4>Quick Export</h4>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+              <button class="btn-ghost vyapar-quick" data-range="today">Today</button>
+              <button class="btn-ghost vyapar-quick" data-range="week">This Week</button>
+              <button class="btn-ghost vyapar-quick" data-range="month">This Month</button>
+              <button class="btn-ghost vyapar-quick" data-range="all">All Paid Orders</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- KPI strip -->
+      <div class="kpi-grid" id="accountsKpis"></div>
+
+      <!-- GST breakdown -->
+      <div class="grid-2">
+        <section class="card">
+          <header class="card-head"><h3>GST Breakdown (18%)</h3><p>On collected payments only</p></header>
+          <div id="gstTable"></div>
+        </section>
+        <section class="card">
+          <header class="card-head"><h3>Payment Split</h3><p>Cash vs Online</p></header>
+          <canvas id="paymentSplitChart" style="max-height:260px"></canvas>
+        </section>
+      </div>
+
+      <!-- Top products by revenue -->
+      <section class="card">
+        <header class="card-head"><h3>Top Products This Month</h3><p>By revenue</p></header>
+        <div class="table-wrap">
+          <table class="data-table" id="accountsTopTable">
+            <thead><tr><th>Product</th><th>Units Sold</th><th>Revenue</th><th>GST (18%)</th><th>Net (excl. GST)</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Pending payments -->
+      <section class="card">
+        <header class="card-head">
+          <h3>Unpaid Orders</h3>
+          <p>Pending payment confirmation by Nisarg</p>
+        </header>
+        <div class="table-wrap">
+          <table class="data-table" id="unpaidTable">
+            <thead><tr><th>Order</th><th>Customer</th><th>Phone</th><th>Amount</th><th>Method</th><th>Date</th><th></th></tr></thead>
             <tbody></tbody>
           </table>
         </div>

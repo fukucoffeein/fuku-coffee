@@ -1545,6 +1545,96 @@ svg { display:block; }
 }
 
 /* ============================================
+   ACCOUNTS + VYAPAR
+   ============================================ */
+.vyapar-card {
+  background: linear-gradient(135deg, #FFF8F0 0%, #fff 80%);
+  border-color: #F5A623;
+}
+.vyapar-brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.vyapar-logo {
+  width: 48px; height: 48px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #F5A623, #E8870A);
+  color: #fff;
+  font-family: var(--font-disp);
+  font-weight: 900;
+  font-size: 24px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 6px 16px rgba(245,166,35,0.4);
+  flex-shrink: 0;
+}
+.vyapar-brand > div { flex: 1; }
+.vyapar-brand h3 {
+  font-family: var(--font-disp);
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.vyapar-brand p { font-size: 13px; color: var(--ink-3); margin-top: 2px; }
+.vyapar-open-btn {
+  background: linear-gradient(135deg, #F5A623, #E8870A) !important;
+  box-shadow: 0 6px 16px rgba(245,166,35,0.35) !important;
+  white-space: nowrap;
+}
+.vyapar-open-btn:hover { background: #E8870A !important; }
+
+.vyapar-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+@media (max-width: 800px) { .vyapar-actions { grid-template-columns: 1fr; } }
+.vyapar-action-group h4 {
+  font-family: var(--font-disp);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.vyapar-action-group p { font-size: 13px; color: var(--ink-3); margin-bottom: 12px; }
+.vyapar-export-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+.vyapar-export-row label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.vyapar-export-row input[type="date"] {
+  padding: 8px 10px;
+  border: 1.5px solid var(--line);
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--ink);
+  background: #fff;
+  outline: none;
+}
+.vyapar-export-row input[type="date"]:focus { border-color: #F5A623; }
+.vyapar-quick {
+  border-color: #F5A623 !important;
+  color: #C47A1A !important;
+  font-size: 12.5px !important;
+}
+.vyapar-quick:hover { background: #FFF3E0 !important; }
+
+/* ============================================
    SETTINGS  &  DANGER ZONE
    ============================================ */
 .settings-me-card {

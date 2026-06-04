@@ -1002,6 +1002,14 @@ class Handler(BaseHTTPRequestHandler):
         if p == '/api/admin/notifications':
             if not self._require_auth(): return
             return self._json(self.notifications())
+        if p == '/api/admin/accounts/summary':
+            if not self._require_auth(): return
+            return self._json(self.accounts_summary())
+        if p == '/api/admin/accounts/vyapar-csv':
+            if not self._require_auth(): return
+            start = qs.get('from', [None])[0]
+            end   = qs.get('to',   [None])[0]
+            return self.accounts_vyapar_csv(start, end)
         if p == '/api/admin/search':
             if not self._require_auth(): return
             q = qs.get('q', [''])[0]
@@ -1917,6 +1925,127 @@ class Handler(BaseHTTPRequestHandler):
                 wiped.update({'stock_batches': True, 'stock_log': True, 'stock_zeroed': True})
             c.commit()
         return self._json({'ok': True, 'mode': mode, 'wiped': wiped, 'by': user})
+
+    # ---- ACCOUNTS / VYAPAR INTEGRATION ----
+    # GST rate applied on all products (18% for coffee/food items in India)
+    GST_RATE = 18
+
+    def accounts_summary(self):
+        """Financial summary for the Accounts department (Nisarg)."""
+        with db() as c:
+            today   = date.today().isoformat()
+            month_s = date.today().replace(day=1).isoformat()
+
+            def fetch(where='', params=()):
+                q = f"""
+                    SELECT COUNT(*) AS orders,
+                           COALESCE(SUM(total),0) AS revenue,
+                           COALESCE(SUM(CASE WHEN payment_method='cash'   THEN total ELSE 0 END),0) AS cash,
+                           COALESCE(SUM(CASE WHEN payment_method='online' THEN total ELSE 0 END),0) AS online,
+                           COALESCE(SUM(CASE WHEN payment_status='paid'   THEN total ELSE 0 END),0) AS collected,
+                           COALESCE(SUM(CASE WHEN payment_status='unpaid' THEN total ELSE 0 END),0) AS pending
+                    FROM orders WHERE status != 'cancelled' {where}
+                """
+                return dict(c.execute(q, params).fetchone())
+
+            today_d   = fetch("AND DATE(created_at) = ?",  (today,))
+            month_d   = fetch("AND DATE(created_at) >= ?", (month_s,))
+            all_time  = fetch()
+
+            # GST breakdown (on collected revenue only)
+            def gst(rev):
+                # Reverse-calculate: total includes GST → base = total * 100/(100+18)
+                base = round(rev * 100 / (100 + self.GST_RATE))
+                return {'base': base, 'gst': rev - base, 'total': rev}
+
+            # Top products this month
+            top = c.execute("""
+                SELECT oi.product_name, SUM(oi.qty) AS qty, SUM(oi.line_total) AS rev
+                FROM order_items oi JOIN orders o ON o.id=oi.order_id
+                WHERE o.status != 'cancelled' AND DATE(o.created_at) >= ?
+                GROUP BY oi.product_id ORDER BY rev DESC LIMIT 8
+            """, (month_s,)).fetchall()
+
+            # Unpaid orders list
+            unpaid = c.execute("""
+                SELECT id, order_no, customer_name, customer_phone, total, created_at, payment_method
+                FROM orders WHERE payment_status='unpaid' AND status != 'cancelled'
+                ORDER BY created_at DESC LIMIT 20
+            """).fetchall()
+
+            return {
+                'today':    {**today_d,  'gst': gst(today_d['collected'])},
+                'month':    {**month_d,  'gst': gst(month_d['collected'])},
+                'all_time': {**all_time, 'gst': gst(all_time['collected'])},
+                'gst_rate': self.GST_RATE,
+                'top_products': [dict(r) for r in top],
+                'unpaid_orders': [dict(r) for r in unpaid],
+                'vyapar_link': 'https://vyaparapp.in/vyapar/billing-invoice/7KM612KPVP',
+            }
+
+    def accounts_vyapar_csv(self, start=None, end=None):
+        """Generate a CSV in Vyapar's Sales Import format.
+           Vyapar columns: Date, Invoice No., Party Name, Phone No., Address,
+           Item Name, Qty, Unit, Price/Unit, Discount%, Tax%, Total Amount,
+           Payment Type, Notes
+        """
+        import csv, io
+        with db() as c:
+            q = """
+                SELECT o.*, oi.product_name, oi.qty, oi.unit_price, oi.line_total
+                FROM orders o JOIN order_items oi ON oi.order_id = o.id
+                WHERE o.status != 'cancelled' AND o.payment_status = 'paid'
+            """
+            params = []
+            if start: q += ' AND DATE(o.created_at) >= ?'; params.append(start)
+            if end:   q += ' AND DATE(o.created_at) <= ?'; params.append(end)
+            q += ' ORDER BY o.created_at'
+            rows = c.execute(q, params).fetchall()
+
+        buf = io.StringIO()
+        writer = csv.writer(buf)
+        writer.writerow([
+            'Date', 'Invoice No.', 'Party Name', 'Phone No.', 'Address',
+            'Item Name', 'Qty', 'Unit', 'Price/Unit', 'Discount%',
+            f'Tax% (GST {self.GST_RATE}%)', 'Tax Amount', 'Total Amount',
+            'Payment Type', 'Notes'
+        ])
+        for r in rows:
+            dt = r['created_at'][:10] if r['created_at'] else ''
+            # Convert YYYY-MM-DD → DD/MM/YYYY for Vyapar
+            try:
+                y,m,d_ = dt.split('-')
+                dt = f"{d_}/{m}/{y}"
+            except Exception:
+                pass
+            base = round(r['line_total'] * 100 / (100 + self.GST_RATE), 2)
+            tax  = round(r['line_total'] - base, 2)
+            writer.writerow([
+                dt,
+                r['order_no'] or '',
+                r['customer_name'] or '',
+                r['customer_phone'] or '',
+                (r['shipping_address'] or '').replace('\n',' '),
+                r['product_name'] or '',
+                r['qty'],
+                'pcs',
+                r['unit_price'],
+                0,
+                self.GST_RATE,
+                tax,
+                r['line_total'],
+                (r['payment_method'] or 'cash').capitalize(),
+                '',
+            ])
+        csv_body = buf.getvalue().encode('utf-8-sig')   # BOM for Excel compat
+        self.send_response(200)
+        self.send_header('Content-Type', 'text/csv; charset=utf-8')
+        filename = f'FUKU_Vyapar_{start or "all"}_{end or "all"}.csv'
+        self.send_header('Content-Disposition', f'attachment; filename="{filename}"')
+        self.send_header('Content-Length', str(len(csv_body)))
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.end_headers()
+        self.wfile.write(csv_body)
 
     # ---- SMART INSIGHTS (auto-generated observations) ----
     def smart_insights(self):

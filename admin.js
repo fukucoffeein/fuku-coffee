@@ -145,6 +145,7 @@ document.querySelectorAll('.nav-link').forEach(link => {
       case 'orders':    loadOrders(); break;
       case 'stock':     loadStock(); break;
       case 'products':  loadProducts(); break;
+      case 'accounts':       loadAccounts(); break;
       case 'team':           loadTeam(); break;
       case 'resellers':      loadResellers(); break;
       case 'subscriptions':  loadSubscriptions(); break;
@@ -1552,6 +1553,129 @@ async function loadResellers() {
   });
 }
 document.getElementById('refreshResellersBtn')?.addEventListener('click', loadResellers);
+
+// ============================================
+// ACCOUNTS + VYAPAR INTEGRATION
+// ============================================
+async function loadAccounts() {
+  const data = await api('/api/admin/accounts/summary');
+
+  // KPI strip
+  const t = data.today, m = data.month, a = data.all_time;
+  document.getElementById('accountsKpis').innerHTML = `
+    <div class="kpi"><p class="kpi-label">Revenue · Today</p><h3 class="kpi-value">${INR(t.revenue)}</h3><p class="kpi-meta">${intf(t.orders)} orders</p></div>
+    <div class="kpi"><p class="kpi-label">Collected · Today</p><h3 class="kpi-value" style="color:var(--green)">${INR(t.collected)}</h3><p class="kpi-meta">Pending: ${INR(t.pending)}</p></div>
+    <div class="kpi"><p class="kpi-label">Revenue · Month</p><h3 class="kpi-value">${INR(m.revenue)}</h3><p class="kpi-meta">${intf(m.orders)} orders</p></div>
+    <div class="kpi"><p class="kpi-label">Collected · Month</p><h3 class="kpi-value" style="color:var(--green)">${INR(m.collected)}</h3><p class="kpi-meta">Pending: ${INR(m.pending)}</p></div>
+    <div class="kpi"><p class="kpi-label">Cash (month)</p><h3 class="kpi-value">${INR(m.cash)}</h3><p class="kpi-meta">${m.revenue > 0 ? Math.round(m.cash*100/m.revenue) : 0}% of revenue</p></div>
+    <div class="kpi"><p class="kpi-label">Online (month)</p><h3 class="kpi-value">${INR(m.online)}</h3><p class="kpi-meta">${m.revenue > 0 ? Math.round(m.online*100/m.revenue) : 0}% of revenue</p></div>
+  `;
+
+  // GST table
+  const gstRows = [
+    { label: 'Today',    ...data.today.gst },
+    { label: 'This Month', ...data.month.gst },
+    { label: 'All Time', ...data.all_time.gst },
+  ];
+  document.getElementById('gstTable').innerHTML = `
+    <table class="data-table">
+      <thead><tr><th>Period</th><th>Taxable Amount</th><th>GST (18%)</th><th>Total</th></tr></thead>
+      <tbody>
+        ${gstRows.map(r => `
+          <tr>
+            <td><strong>${r.label}</strong></td>
+            <td class="num">${INR(r.base)}</td>
+            <td class="num" style="color:var(--orange)">${INR(r.gst)}</td>
+            <td class="num">${INR(r.total)}</td>
+          </tr>`).join('')}
+      </tbody>
+    </table>`;
+
+  // Payment split chart
+  destroyChart('paymentSplit');
+  charts.paymentSplit = new Chart(document.getElementById('paymentSplitChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['💵 Cash', '🌐 Online', '⏳ Pending'],
+      datasets: [{
+        data: [m.cash, m.online, m.pending],
+        backgroundColor: ['#F59E0B','#3B82F6','#E5E7EB'],
+        borderWidth: 3, borderColor: '#fff',
+      }],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, cutout: '58%',
+      plugins: {
+        legend: { position: 'bottom', labels: { color: COLORS.ink3, font: { size: 12, family: 'Inter' }, padding: 14 } },
+        tooltip: { callbacks: { label: ctx => `${ctx.label}: ${INR(ctx.parsed)}` } },
+      },
+    },
+  });
+
+  // Top products table
+  document.querySelector('#accountsTopTable tbody').innerHTML = data.top_products.length
+    ? data.top_products.map(p => {
+        const gst  = Math.round(p.rev - p.rev * 100 / 118);
+        const base = p.rev - gst;
+        return `<tr>
+          <td class="customer-name">${p.product_name}</td>
+          <td class="num">${intf(p.qty)}</td>
+          <td class="num">${INR(p.rev)}</td>
+          <td class="num" style="color:var(--orange)">${INR(gst)}</td>
+          <td class="num">${INR(base)}</td>
+        </tr>`;
+      }).join('')
+    : `<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--ink-3)">No data for this month yet.</td></tr>`;
+
+  // Unpaid orders
+  document.querySelector('#unpaidTable tbody').innerHTML = data.unpaid_orders.length
+    ? data.unpaid_orders.map(o => `
+        <tr>
+          <td><span class="order-no">${o.order_no}</span></td>
+          <td>${o.customer_name||'—'}</td>
+          <td>${o.customer_phone||'—'}</td>
+          <td class="num"><strong>${INR(o.total)}</strong></td>
+          <td>${o.payment_method||'—'}</td>
+          <td>${formatDate(o.created_at)}</td>
+          <td><button class="btn-ghost" onclick="showOrderModal(${o.id})">View</button></td>
+        </tr>`).join('')
+    : `<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--green)">🎉 All orders paid!</td></tr>`;
+}
+
+// Vyapar CSV download
+function downloadVyaparCSV(from, to) {
+  const params = new URLSearchParams();
+  if (from) params.set('from', from);
+  if (to)   params.set('to',   to);
+  const url = `/api/admin/accounts/vyapar-csv?${params}`;
+  const a = document.createElement('a');
+  a.href = url; a.click();
+  showToast('Downloading Vyapar CSV…');
+}
+
+document.getElementById('refreshAccountsBtn')?.addEventListener('click', loadAccounts);
+
+document.getElementById('vExportBtn')?.addEventListener('click', () => {
+  const from = document.getElementById('vExportFrom').value;
+  const to   = document.getElementById('vExportTo').value;
+  downloadVyaparCSV(from || null, to || null);
+});
+
+document.querySelectorAll('.vyapar-quick').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const range = btn.dataset.range;
+    const today = new Date().toISOString().slice(0,10);
+    let from = null, to = today;
+    if (range === 'today') { from = today; }
+    else if (range === 'week') {
+      const d = new Date(); d.setDate(d.getDate() - 6);
+      from = d.toISOString().slice(0,10);
+    } else if (range === 'month') {
+      from = new Date().toISOString().slice(0,8) + '01';
+    }
+    downloadVyaparCSV(from, range === 'all' ? null : to);
+  });
+});
 
 // Reseller modal
 const rsModal = document.getElementById('resellerModal');
