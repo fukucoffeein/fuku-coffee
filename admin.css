@@ -90,20 +90,25 @@ button { font: inherit; cursor: pointer; background: none; border: none; color: 
 input, select, textarea { font: inherit; }
 svg { display:block; }
 
-.logo-main {
-  font-family: var(--font-disp);
-  font-weight: 900;
-  font-size: 24px;
-  color: #fff;
-  letter-spacing: -0.02em;
+.logo-main { display: none; }
+.logo-sub  { display: none; }
+
+/* Sidebar logo image */
+.sidebar-logo {
+  height: 42px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+  /* White logo on dark sidebar — already white, just brighten slightly */
+  filter: brightness(10) contrast(0.95);
 }
-.logo-sub {
-  font-family: 'Caveat', cursive;
-  font-weight: 700;
-  font-size: 17px;
-  color: var(--purple-300);
-  margin-left: 14px;
-  display: inline-block;
+
+/* Login page logo */
+.login-logo-img {
+  height: 64px;
+  width: auto;
+  display: block;
+  margin-bottom: 4px;
 }
 
 /* ============================================
@@ -124,8 +129,6 @@ svg { display:block; }
   max-width: 560px;
 }
 .login-logo { margin-bottom: 30px; }
-.login-logo .logo-main { color: var(--purple-800); }
-.login-logo .logo-sub  { color: var(--purple-700); }
 
 .login-card h2 {
   font-family: var(--font-disp);
