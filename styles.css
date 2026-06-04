@@ -183,7 +183,7 @@ h2 em { font-style: italic; font-weight: 400; color: var(--purple-700); }
 .nav-inner {
   max-width: 1500px;
   margin: 0 auto;
-  padding: 18px 6vw;
+  padding: 10px 6vw;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -197,11 +197,18 @@ h2 em { font-style: italic; font-weight: 400; color: var(--purple-700); }
   flex-shrink: 0;
 }
 .logo-img {
-  height: 64px;
+  height: 90px;
   width: auto;
   display: block;
   object-fit: contain;
   transition: opacity .2s;
+}
+
+@media (max-width: 1000px) {
+  .logo-img { height: 72px; }
+}
+@media (max-width: 600px) {
+  .logo-img { height: 56px; }
 }
 /* Purple logo on light nav, white hidden */
 .logo-img-purple { display: block;  }
