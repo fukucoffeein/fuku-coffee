@@ -183,7 +183,7 @@ h2 em { font-style: italic; font-weight: 400; color: var(--purple-700); }
 .nav-inner {
   max-width: 1500px;
   margin: 0 auto;
-  padding: 10px 6vw;
+  padding: 6px 6vw;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -197,7 +197,7 @@ h2 em { font-style: italic; font-weight: 400; color: var(--purple-700); }
   flex-shrink: 0;
 }
 .logo-img {
-  height: 90px;
+  height: 180px;
   width: auto;
   display: block;
   object-fit: contain;
@@ -205,10 +205,10 @@ h2 em { font-style: italic; font-weight: 400; color: var(--purple-700); }
 }
 
 @media (max-width: 1000px) {
-  .logo-img { height: 72px; }
+  .logo-img { height: 140px; }
 }
 @media (max-width: 600px) {
-  .logo-img { height: 56px; }
+  .logo-img { height: 100px; }
 }
 /* Purple logo on light nav, white hidden */
 .logo-img-purple { display: block;  }
