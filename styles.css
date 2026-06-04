@@ -36,20 +36,24 @@
   --shadow:     0 10px 30px rgba(42, 8, 87, 0.10);
   --shadow-lg:  0 24px 60px rgba(42, 8, 87, 0.18);
 
-  --font-sans:  'Inter', system-ui, -apple-system, sans-serif;
+  --font-sans:  'DM Sans', 'Inter', system-ui, -apple-system, sans-serif;
   --font-disp:  'Fraunces', Georgia, serif;
   --font-script:'Caveat', cursive;
+  --font-size-base: 16px;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body {
   font-family: var(--font-sans);
+  font-size: var(--font-size-base);
   background: var(--bg);
   color: var(--ink);
-  line-height: 1.55;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+  font-feature-settings: "kern" 1, "liga" 1;
 }
 
 img, svg { display: block; max-width: 100%; }
@@ -64,11 +68,12 @@ input, select, textarea { font: inherit; }
 h1, h2, h3, h4 {
   font-family: var(--font-disp);
   font-weight: 700;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
   line-height: 1.05;
   color: var(--ink);
 }
 h2 em { font-style: italic; font-weight: 400; color: var(--purple-700); }
+p { font-size: 16px; line-height: 1.65; }
 
 .eyebrow {
   font-family: var(--font-sans);
@@ -83,7 +88,7 @@ h2 em { font-style: italic; font-weight: 400; color: var(--purple-700); }
 }
 .eyebrow .dash { width: 28px; height: 1.5px; background: var(--purple-700); display: inline-block; }
 
-.lede { color: var(--ink-3); font-size: 17px; max-width: 600px; margin-top: 14px; }
+.lede { color: var(--ink-3); font-size: 19px; max-width: 600px; margin-top: 16px; font-weight: 400; }
 
 .section-head { padding: 90px 6vw 50px; text-align: center; }
 .section-head h2 { font-size: clamp(36px, 5.5vw, 72px); margin-top: 18px; }
@@ -106,10 +111,10 @@ h2 em { font-style: italic; font-weight: 400; color: var(--purple-700); }
   align-items: center;
   justify-content: center;
   gap: 10px;
-  padding: 15px 26px;
-  font-weight: 600;
-  font-size: 14.5px;
-  letter-spacing: 0.02em;
+  padding: 16px 30px;
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: -0.01em;
   border-radius: 999px;
   transition: all 0.25s ease;
   white-space: nowrap;
@@ -156,9 +161,9 @@ h2 em { font-style: italic; font-weight: 400; color: var(--purple-700); }
   gap: 36px;
   white-space: nowrap;
   animation: scroll-left 40s linear infinite;
-  font-size: 11.5px;
-  font-weight: 500;
-  letter-spacing: 0.12em;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
 }
 .announce-track span { display: inline-block; }
 @keyframes scroll-left {
@@ -219,9 +224,10 @@ h2 em { font-style: italic; font-weight: 400; color: var(--purple-700); }
 
 .nav-links {
   display: flex;
-  gap: 28px;
-  font-size: 14px;
-  font-weight: 500;
+  gap: 32px;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 .nav-links a {
   position: relative;
@@ -417,11 +423,12 @@ h2 em { font-style: italic; font-weight: 400; color: var(--purple-700); }
 }
 
 .hero-sub {
-  font-size: 18px;
+  font-size: 20px;
   color: var(--ink-3);
   margin: 28px 0 36px;
   max-width: 520px;
-  line-height: 1.6;
+  line-height: 1.65;
+  font-weight: 400;
 }
 
 .hero-cta { display: flex; gap: 14px; flex-wrap: wrap; }
@@ -438,11 +445,11 @@ h2 em { font-style: italic; font-weight: 400; color: var(--purple-700); }
 .hero-trust li { display: flex; flex-direction: column; gap: 4px; }
 .hero-trust strong {
   font-family: var(--font-disp);
-  font-size: 26px;
-  font-weight: 700;
+  font-size: 30px;
+  font-weight: 800;
   color: var(--purple-800);
 }
-.hero-trust span { font-size: 12.5px; color: var(--ink-3); }
+.hero-trust span { font-size: 14px; color: var(--ink-3); font-weight: 500; }
 
 /* HERO PRODUCT CARD */
 .hero-card {
@@ -624,9 +631,9 @@ h2 em { font-style: italic; font-weight: 400; color: var(--purple-700); }
   gap: 36px;
   white-space: nowrap;
   animation: scroll-left 38s linear infinite;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.18em;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
 }
 
 /* ============================================
@@ -1043,25 +1050,25 @@ h2 em { font-style: italic; font-weight: 400; color: var(--purple-700); }
   flex: 1;
 }
 .pc-cat {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.15em;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--purple-700);
 }
 .pc-name {
   font-family: var(--font-disp);
-  font-size: 19px;
+  font-size: 21px;
   font-weight: 700;
   color: var(--ink);
-  margin-top: 2px;
+  margin-top: 4px;
   line-height: 1.2;
 }
 .pc-desc {
-  font-size: 13.5px;
+  font-size: 15px;
   color: var(--ink-3);
-  line-height: 1.5;
-  margin-top: 4px;
+  line-height: 1.55;
+  margin-top: 6px;
   flex: 1;
 }
 .pc-bottom {
@@ -1078,12 +1085,12 @@ h2 em { font-style: italic; font-weight: 400; color: var(--purple-700); }
 }
 .pc-price .now {
   font-family: var(--font-disp);
-  font-weight: 700;
-  font-size: 22px;
+  font-weight: 800;
+  font-size: 26px;
   color: var(--ink);
 }
 .pc-price .was {
-  font-size: 12.5px;
+  font-size: 14px;
   color: var(--ink-3);
   text-decoration: line-through;
 }
@@ -1374,9 +1381,9 @@ h2 em { font-style: italic; font-weight: 400; color: var(--purple-700); }
 }
 .story-body p {
   color: var(--ink-3);
-  font-size: 16px;
-  line-height: 1.7;
-  margin-bottom: 16px;
+  font-size: 17px;
+  line-height: 1.75;
+  margin-bottom: 18px;
 }
 .story-body strong { color: var(--ink); font-weight: 700; }
 .story-stats {
@@ -1512,7 +1519,7 @@ h2 em { font-style: italic; font-weight: 400; color: var(--purple-700); }
 .faq-list summary {
   padding: 22px 26px;
   font-family: var(--font-disp);
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 600;
   color: var(--ink);
   cursor: pointer;
@@ -1534,8 +1541,8 @@ h2 em { font-style: italic; font-weight: 400; color: var(--purple-700); }
 .faq-list details p {
   padding: 0 26px 24px;
   color: var(--ink-3);
-  font-size: 15px;
-  line-height: 1.65;
+  font-size: 16px;
+  line-height: 1.7;
 }
 .faq-list details a { color: var(--purple-700); font-weight: 600; }
 
@@ -1812,7 +1819,7 @@ h2 em { font-style: italic; font-weight: 400; color: var(--purple-700); }
   margin-bottom: 8px;
 }
 .footer-col a, .footer-col span {
-  font-size: 14px;
+  font-size: 15px;
   color: rgba(255,255,255,0.65);
   transition: color 0.2s;
 }
