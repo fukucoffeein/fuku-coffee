@@ -1870,56 +1870,82 @@ h2 em { font-style: italic; font-weight: 400; color: var(--purple-700); }
 }
 
 /* ============================================
-   WHATSAPP FLOAT
+   WHATSAPP FLOAT — Pill button
    ============================================ */
 
 .wa-float {
   position: fixed;
-  bottom: 24px;
+  bottom: 28px;
   right: 24px;
-  width: 60px;
-  height: 60px;
-  background: var(--green);
-  color: #fff;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 10px 30px rgba(37, 211, 102, 0.45);
   z-index: 90;
-  transition: all 0.3s;
-}
-.wa-float:hover { transform: scale(1.08); }
-.wa-float svg { width: 30px; height: 30px; }
-.wa-float-bubble {
-  position: absolute;
-  right: 75px;
-  background: var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 22px 10px 10px;
+  background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
   color: #fff;
-  padding: 10px 16px;
-  border-radius: 12px;
-  font-size: 12.5px;
-  font-weight: 600;
-  white-space: nowrap;
-  opacity: 0;
-  transform: translateX(10px);
-  pointer-events: none;
-  transition: all 0.3s;
+  border-radius: 999px;
+  text-decoration: none;
+  box-shadow:
+    0 8px 28px rgba(37,211,102,0.5),
+    0 2px 8px rgba(0,0,0,0.14),
+    inset 0 1px 0 rgba(255,255,255,0.22);
+  transition: transform 0.3s cubic-bezier(.5,1.5,.5,1), box-shadow 0.3s;
+  animation: wa-slide-in 0.7s cubic-bezier(.4,1.5,.5,1) 1.2s both;
 }
-.wa-float:hover .wa-float-bubble { opacity: 1; transform: translateX(0); }
+@keyframes wa-slide-in {
+  from { transform: translateX(140px); opacity: 0; }
+  to   { transform: translateX(0);     opacity: 1; }
+}
+.wa-float:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 16px 40px rgba(37,211,102,0.6), 0 4px 12px rgba(0,0,0,0.18);
+}
+.wa-float:active { transform: scale(0.97); }
+
+/* Pulse ring behind icon */
 .wa-float::before {
   content: '';
   position: absolute;
-  inset: -6px;
+  left: 10px;
+  top: 50%;
+  width: 44px; height: 44px;
+  margin-top: -22px;
   border-radius: 50%;
-  background: var(--green);
-  opacity: 0.4;
+  background: rgba(255,255,255,0.22);
   z-index: -1;
-  animation: ping 2s ease-out infinite;
+  animation: wa-ping 2.2s ease-out infinite;
 }
-@keyframes ping {
-  0% { transform: scale(1); opacity: 0.4; }
-  100% { transform: scale(1.6); opacity: 0; }
+@keyframes wa-ping {
+  0%   { transform: scale(1);   opacity: 0.6; }
+  80%  { transform: scale(1.7); opacity: 0; }
+  100% { transform: scale(1.7); opacity: 0; }
+}
+.wa-float-icon {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  box-shadow: inset 0 0 0 1.5px rgba(255,255,255,0.32);
+}
+.wa-float-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+  gap: 2px;
+}
+.wa-float-text strong {
+  font-family: var(--font-sans, 'Inter', system-ui, sans-serif);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+.wa-float-text small {
+  font-family: var(--font-sans, 'Inter', system-ui, sans-serif);
+  font-size: 11px;
+  font-weight: 500;
+  opacity: 0.85;
 }
 
 /* ============================================
@@ -2335,11 +2361,8 @@ h2 em { font-style: italic; font-weight: 400; color: var(--purple-700); }
    ============================================ */
 @media (max-width: 700px) {
   /* Stack floating CTAs above the quick-order bar */
-  .wa-float, .chat-fab { bottom: 84px !important; }
-
-  /* Hide the redundant wa-float on mobile — chat-fab + quick-bar cover both jobs.
-     The wa-float button just clones the hero "Order on WhatsApp" CTA — kill it on small screens. */
-  .wa-float { display: none !important; }
+  .chat-fab { bottom: 84px !important; }
+  .wa-float  { display: none !important; }   /* hidden on mobile — chat-fab + quick-bar cover it */
 
   /* Shrink chat-fab into a compact pill on small screens
      so it doesn't crash into hero text or product cards */

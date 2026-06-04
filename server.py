@@ -278,15 +278,31 @@ class TursoConnection:
     def __exit__(self, *a): self.close()
 
 
+# ── Turso credentials ──────────────────────────────────────────────────────
+# Primary:  TURSO_DATABASE_URL / TURSO_AUTH_TOKEN environment variables.
+# Fallback: values below (used when env vars are absent, e.g. Vercel cold start).
+_TURSO_URL_DEFAULT   = 'libsql://fuku-fukucoffeein.aws-ap-south-1.turso.io'
+_TURSO_TOKEN_DEFAULT = (
+    'eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9'
+    '.eyJpYXQiOjE3ODA1MDg4MjEsImlkIjoiMDE5ZThlNmYtZTAwMS03Zjk4'
+    'LWJlOWItMzQ0YmQyNTY3MmQ2IiwicmlkIjoiZjE2NGRmZDEtNzY1OC00OWRh'
+    'LTk0OGItOTNjZTBmNzMxNGY0In0'
+    '.Oi1DJzaPsvan8XZNbIRJY7Q4ShWINF2lVOtDmmTn2zrz9IwQMgjQ2PM3Gke'
+    'UwK-lALCzpRyysBYaJnIXG8QoAQ'
+)
+# ───────────────────────────────────────────────────────────────────────────
+
 def db():
     """Open a DB connection.
-       - If TURSO_DATABASE_URL env var is set (Vercel / production), uses the HTTP-based
-         Turso client above (works in serverless functions, no embedded library needed).
-       - Otherwise falls back to local SQLite (dev / VPS).
+       1. TURSO_DATABASE_URL / TURSO_AUTH_TOKEN env vars (preferred on Vercel).
+       2. Hardcoded fallback constants above (used when env vars absent).
+       3. Local SQLite file (local dev / VPS).
     """
-    turso_url = os.environ.get('TURSO_DATABASE_URL', '').strip()
-    if turso_url:
-        return TursoConnection(turso_url, os.environ.get('TURSO_AUTH_TOKEN', ''))
+    turso_url   = os.environ.get('TURSO_DATABASE_URL', '').strip() or _TURSO_URL_DEFAULT
+    turso_token = os.environ.get('TURSO_AUTH_TOKEN',   '').strip() or _TURSO_TOKEN_DEFAULT
+    # Use Turso whenever a URL is present (always true after the defaults above)
+    if turso_url and turso_url.startswith('libsql://'):
+        return TursoConnection(turso_url, turso_token)
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     conn.execute('PRAGMA foreign_keys = ON')
@@ -887,19 +903,21 @@ class Handler(BaseHTTPRequestHandler):
         qs = urllib.parse.parse_qs(url.query)
 
         if p == '/api/_health':
-            # Diagnostic — env vars + db type
             try:
                 conn = db()
                 db_type = type(conn).__name__
+                # Try a live read to prove the connection works
+                n = conn.execute('SELECT COUNT(*) AS c FROM products').fetchone()
+                product_count = n['c'] if n else 0
             except Exception as e:
                 db_type = f'ERROR: {e}'
+                product_count = -1
             return self._json({
-                'turso_url_set':  bool(os.environ.get('TURSO_DATABASE_URL', '').strip()),
-                'turso_token_set': bool(os.environ.get('TURSO_AUTH_TOKEN', '').strip()),
-                'turso_url_starts': os.environ.get('TURSO_DATABASE_URL', '')[:30],
-                'fuku_secret_set': bool(os.environ.get('FUKU_SECRET', '').strip()),
+                'status':         'ok' if 'ERROR' not in db_type else 'error',
                 'db_type':        db_type,
-                'env_keys':       sorted([k for k in os.environ.keys() if 'TURSO' in k or 'FUKU' in k]),
+                'product_count':  product_count,
+                'turso_via_env':  bool(os.environ.get('TURSO_DATABASE_URL', '').strip()),
+                'turso_via_default': not bool(os.environ.get('TURSO_DATABASE_URL', '').strip()),
             })
 
         if p == '/api/products':

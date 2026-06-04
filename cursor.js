@@ -1,10 +1,54 @@
 /* ============================================
-   FUKU Coffee — Custom Cursor (ring + dot)
-   Skipped on touch devices.
+   FUKU Coffee — Coffee Bean Cursor
+   Replaces the default OS pointer with a
+   hand-painted coffee-bean shape + eased trail.
+   Skipped on touch/stylus devices automatically.
    ============================================ */
 (function () {
-  if (window.matchMedia('(hover: none)').matches) return;       // touch device
+  if (window.matchMedia('(hover: none)').matches) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  // ── Coffee bean SVG (two halves + centre crease) ──────────────────────
+  const BEAN_SVG = `
+<svg xmlns="http://www.w3.org/2000/svg" width="28" height="36" viewBox="0 0 28 36">
+  <defs>
+    <radialGradient id="bg" cx="40%" cy="35%" r="65%">
+      <stop offset="0%"  stop-color="#6B3A28"/>
+      <stop offset="100%" stop-color="#2A1208"/>
+    </radialGradient>
+  </defs>
+  <!-- Bean body -->
+  <ellipse cx="14" cy="18" rx="11" ry="15.5" fill="url(#bg)"/>
+  <!-- Highlight -->
+  <ellipse cx="10" cy="11" rx="3.5" ry="2.5" fill="rgba(255,255,255,0.12)" transform="rotate(-20,10,11)"/>
+  <!-- Centre crease -->
+  <path d="M14 4 C10 9 9 15 10 20 C11 25 13 28 14 32
+           C15 28 17 25 18 20 C19 15 18 9 14 4Z"
+        fill="rgba(0,0,0,0.28)"/>
+  <path d="M14 5 C10.5 10 10 16 11 21 C12 26 13 29 14 32"
+        stroke="rgba(255,255,255,0.09)" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+</svg>`;
+
+  // Hover-state bean (slightly lighter, bigger)
+  const BEAN_HOVER_SVG = `
+<svg xmlns="http://www.w3.org/2000/svg" width="34" height="44" viewBox="0 0 34 44">
+  <defs>
+    <radialGradient id="bgh" cx="40%" cy="35%" r="65%">
+      <stop offset="0%"  stop-color="#8B4E36"/>
+      <stop offset="100%" stop-color="#3B1A10"/>
+    </radialGradient>
+  </defs>
+  <ellipse cx="17" cy="22" rx="13" ry="19" fill="url(#bgh)"/>
+  <ellipse cx="12" cy="13" rx="4" ry="3" fill="rgba(255,255,255,0.14)" transform="rotate(-20,12,13)"/>
+  <path d="M17 5 C12 11 11 18 12 24 C13 30 15 34 17 40
+           C19 34 21 30 22 24 C23 18 22 11 17 5Z"
+        fill="rgba(0,0,0,0.25)"/>
+  <path d="M17 6 C13 12 12 19 13 25 C14 31 16 35 17 40"
+        stroke="rgba(255,255,255,0.1)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+</svg>`;
+
+  const toDataURL = svg =>
+    'url("data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svg.trim()))) + '")';
 
   const style = document.createElement('style');
   style.textContent = `
@@ -13,132 +57,118 @@
     .product-card, .cat-card, .pc-add, .filter-chip,
     [role="button"], [tabindex]:not([tabindex="-1"]) { cursor: none; }
 
-    .fuku-cursor-ring,
-    .fuku-cursor-dot {
+    /* Eased bean (trails behind) */
+    .fuku-bean {
       position: fixed;
       top: 0; left: 0;
+      width: 28px; height: 36px;
       pointer-events: none;
       z-index: 99999;
       will-change: transform;
+      transform: translate3d(-100px,-100px,0) translate(-50%,-60%);
+      transition: width .22s, height .22s, opacity .2s;
+      filter: drop-shadow(0 2px 6px rgba(42,18,8,0.45));
     }
-    .fuku-cursor-ring {
-      width: 32px; height: 32px;
-      border: 1.5px solid #1A0F2E;
+    .fuku-bean img { width:100%; height:100%; display:block; }
+
+    /* Tiny precise dot (instant) */
+    .fuku-dot {
+      position: fixed;
+      top: 0; left: 0;
+      width: 5px; height: 5px;
+      background: #C97A3E;
       border-radius: 50%;
-      transform: translate3d(-100px, -100px, 0) translate(-50%, -50%);
-      transition:
-        width  .25s cubic-bezier(.5,1.5,.5,1),
-        height .25s cubic-bezier(.5,1.5,.5,1),
-        background .25s ease,
-        border-color .25s ease,
-        opacity .2s;
-      box-shadow:
-        0 0 0 1px rgba(255,255,255,.55),
-        0 2px 8px rgba(26,15,46,.12);
-      backdrop-filter: blur(2px);
-      -webkit-backdrop-filter: blur(2px);
-    }
-    .fuku-cursor-dot {
-      width: 6px; height: 6px;
-      background: #1A0F2E;
-      border-radius: 50%;
-      transform: translate3d(-100px, -100px, 0) translate(-50%, -50%);
-      box-shadow: 0 0 0 1px rgba(255,255,255,.5);
-      transition: width .2s, height .2s, opacity .2s;
+      pointer-events: none;
+      z-index: 100000;
+      will-change: transform;
+      transform: translate3d(-100px,-100px,0) translate(-50%,-50%);
+      box-shadow: 0 0 0 1.5px rgba(255,255,255,0.7);
+      transition: opacity .2s, width .2s, height .2s;
     }
 
-    /* Expanded over interactive elements */
-    .fuku-cursor-ring.is-hover {
-      width: 56px; height: 56px;
-      background: rgba(74, 26, 142, 0.10);
-      border-color: #4A1A8E;
-    }
-    .fuku-cursor-ring.is-press {
-      width: 24px; height: 24px;
-      background: rgba(74, 26, 142, 0.20);
-    }
-    .fuku-cursor-dot.is-hover { width: 4px; height: 4px; }
+    /* Hover state */
+    .fuku-bean.is-hover { width:34px; height:44px; filter:drop-shadow(0 4px 10px rgba(42,18,8,0.55)); }
+    .fuku-dot.is-hover  { width:7px; height:7px; background:#E8A060; }
 
-    /* On purple/dark sections invert via mix-blend */
-    .fuku-cursor-ring.on-dark { border-color: #fff; }
-    .fuku-cursor-dot.on-dark  { background: #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.3); }
+    /* Click pulse */
+    .fuku-bean.is-press { filter:drop-shadow(0 1px 3px rgba(42,18,8,0.3)) brightness(1.2); }
 
-    /* Hide while moving over inputs so it's not annoying when typing */
-    .fuku-cursor-ring.text-mode,
-    .fuku-cursor-dot.text-mode { opacity: 0; }
+    /* On dark backgrounds */
+    .fuku-bean.on-dark { filter:drop-shadow(0 2px 8px rgba(0,0,0,0.6)) brightness(1.25); }
+
+    /* Text inputs — hide bean, show normal caret */
+    .fuku-bean.text-mode, .fuku-dot.text-mode { opacity:0; }
   `;
   document.head.appendChild(style);
 
-  const ring = document.createElement('div');
-  ring.className = 'fuku-cursor-ring';
+  // Build DOM elements
+  const bean = document.createElement('div');
+  bean.className = 'fuku-bean';
+  const beanImg = document.createElement('img');
+  beanImg.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(BEAN_SVG.trim())));
+  beanImg.setAttribute('aria-hidden', 'true');
+  bean.appendChild(beanImg);
+
   const dot = document.createElement('div');
-  dot.className = 'fuku-cursor-dot';
-  document.body.append(ring, dot);
+  dot.className = 'fuku-dot';
 
-  let mx = -100, my = -100;   // current mouse pos
-  let rx = -100, ry = -100;   // ring follow pos (eased)
+  document.body.append(bean, dot);
 
-  // Live mouse → dot moves immediately
+  let mx = -100, my = -100;
+  let bx = -100, by = -100;
+
+  // Dot: instant follow
   document.addEventListener('mousemove', e => {
     mx = e.clientX; my = e.clientY;
-    dot.style.transform =
-      `translate3d(${mx}px, ${my}px, 0) translate(-50%, -50%)`;
+    dot.style.transform = `translate3d(${mx}px,${my}px,0) translate(-50%,-50%)`;
   }, { passive: true });
 
-  // Ring follows with easing
+  // Bean: eased follow
   (function loop() {
-    rx += (mx - rx) * 0.18;
-    ry += (my - ry) * 0.18;
-    ring.style.transform =
-      `translate3d(${rx}px, ${ry}px, 0) translate(-50%, -50%)`;
+    bx += (mx - bx) * 0.16;
+    by += (my - by) * 0.16;
+    bean.style.transform = `translate3d(${bx}px,${by}px,0) translate(-50%,-60%)`;
     requestAnimationFrame(loop);
   })();
 
-  // Hover / press / text states
-  const HOVER_SEL = 'a, button, .pc-add, .product-card, .cat-card, .filter-chip, [role="button"], .ig-tile, .post, .rev-card';
-  const TEXT_SEL  = 'input, textarea, select, [contenteditable="true"]';
+  // Hover, text, press selectors
+  const HOVER_SEL = 'a,button,.pc-add,.product-card,.cat-card,.filter-chip,[role="button"],.ig-tile,.sub-btn,.btn,.wa-float,.chat-fab';
+  const TEXT_SEL  = 'input,textarea,select,[contenteditable="true"]';
 
   document.addEventListener('mouseover', e => {
-    if (e.target.closest(TEXT_SEL)) {
-      ring.classList.add('text-mode'); dot.classList.add('text-mode');
-    }
+    if (e.target.closest(TEXT_SEL)) { bean.classList.add('text-mode'); dot.classList.add('text-mode'); }
     if (e.target.closest(HOVER_SEL)) {
-      ring.classList.add('is-hover'); dot.classList.add('is-hover');
+      bean.classList.add('is-hover'); dot.classList.add('is-hover');
+      beanImg.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(BEAN_HOVER_SVG.trim())));
     }
   });
   document.addEventListener('mouseout', e => {
-    if (e.target.closest(TEXT_SEL)) {
-      ring.classList.remove('text-mode'); dot.classList.remove('text-mode');
+    if (e.target.closest(TEXT_SEL) && !e.relatedTarget?.closest?.(TEXT_SEL)) {
+      bean.classList.remove('text-mode'); dot.classList.remove('text-mode');
     }
-    if (e.target.closest(HOVER_SEL) &&
-        !e.relatedTarget?.closest?.(HOVER_SEL)) {
-      ring.classList.remove('is-hover'); dot.classList.remove('is-hover');
+    if (e.target.closest(HOVER_SEL) && !e.relatedTarget?.closest?.(HOVER_SEL)) {
+      bean.classList.remove('is-hover'); dot.classList.remove('is-hover');
+      beanImg.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(BEAN_SVG.trim())));
     }
   });
 
-  document.addEventListener('mousedown', () => ring.classList.add('is-press'));
-  document.addEventListener('mouseup',   () => ring.classList.remove('is-press'));
+  document.addEventListener('mousedown', () => bean.classList.add('is-press'));
+  document.addEventListener('mouseup',   () => bean.classList.remove('is-press'));
 
-  // Detect dark sections to invert cursor colour
-  const darkSelectors = ['.hero', '.brew', '.news', '.footer', '.story-art', '.announce', '.marquee', '.banner'];
-  function checkDark() {
-    const el = document.elementFromPoint(mx, my);
-    if (!el) return;
-    const dark = darkSelectors.some(sel => el.closest(sel));
-    ring.classList.toggle('on-dark', dark);
-    dot.classList.toggle('on-dark', dark);
-  }
-  let checkTick;
+  // Dark-section inversion
+  const DARK_SELS = ['.hero','.brew','.news','.footer','.story-art','.announce','.marquee'];
+  let ckTimer;
   document.addEventListener('mousemove', () => {
-    if (checkTick) return;
-    checkTick = setTimeout(() => { checkDark(); checkTick = null; }, 80);
+    if (ckTimer) return;
+    ckTimer = setTimeout(() => {
+      const el = document.elementFromPoint(mx, my);
+      const dark = el && DARK_SELS.some(s => el.closest(s));
+      bean.classList.toggle('on-dark', !!dark);
+      ckTimer = null;
+    }, 80);
   }, { passive: true });
 
-  // Hide cursor when mouse leaves the viewport
-  document.addEventListener('mouseleave', () => {
-    ring.style.opacity = '0'; dot.style.opacity = '0';
-  });
-  document.addEventListener('mouseenter', () => {
-    ring.style.opacity = '1'; dot.style.opacity = '1';
-  });
+  // Hide when mouse leaves viewport
+  document.addEventListener('mouseleave', () => { bean.style.opacity='0'; dot.style.opacity='0'; });
+  document.addEventListener('mouseenter', () => { bean.style.opacity='1'; dot.style.opacity='1'; });
 })();
