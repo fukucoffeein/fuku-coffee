@@ -531,7 +531,17 @@ async function submitCheckout(e) {
   msg += `\nThanks! 🙏`;
 
   const url = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
-  window.open(url, '_blank');
+  // This runs AFTER `await fetch(...)`, i.e. outside the click's user-gesture
+  // context, so mobile browsers (and desktop popup blockers) block window.open()
+  // and the redirect silently fails. Navigate directly on mobile (no popup to
+  // block); keep the new-tab behaviour on desktop with a same-tab fallback.
+  const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+  if (isMobile) {
+    window.location.href = url;
+  } else {
+    const waWin = window.open(url, '_blank');
+    if (!waWin) window.location.href = url;
+  }
 
   // Clear cart on success
   if (orderNo) {
