@@ -58,26 +58,20 @@ DB_LOCK = Lock()
 
 WA_NUMBER  = '919574323011'
 
-# Service area: Surat only. Free delivery within ~5km of Piplod, paid for
-# rest of Surat, no auto-delivery outside Surat (WhatsApp confirmation needed).
-PIPLOD_5KM_PINCODES = {'395007','395017','395009','395013'}  # Piplod, Vesu, Citylight, Athwa
-SURAT_PAID_PINCODES = {'395001','395002','395003','395004','395005','395006','395008',
-                       '395010','395011','395012','395023'}  # other Surat areas
-SURAT_PAID_FEE = 50          # flat fee for paid Surat zones
-FREE_RADIUS_LABEL = '5 km from Piplod'
+# Service area: Surat only. No fixed delivery fee — delivery is charged by
+# location and confirmed on WhatsApp. Outside Surat: courier confirmed on WA.
 
 def _pincode_from(addr):
     m = re.search(r'\b(\d{6})\b', addr or '')
     return m.group(1) if m else ''
 
 def shipping_for(addr):
-    """Return (fee, zone) where zone ∈ free|paid|outside|unknown."""
+    """Return (fee, zone) where zone ∈ surat|outside|unknown.
+    No fixed fee — delivery is charged by location and confirmed on WhatsApp."""
     pc = _pincode_from(addr)
-    if pc in PIPLOD_5KM_PINCODES: return (0, 'free')
-    if pc in SURAT_PAID_PINCODES: return (SURAT_PAID_FEE, 'paid')
-    if pc.startswith('395') or pc.startswith('394'): return (SURAT_PAID_FEE, 'paid')
+    if pc.startswith('395') or pc.startswith('394'): return (0, 'surat')
     if not pc: return (0, 'unknown')              # confirm on WA
-    return (0, 'outside')                         # we'll reject / confirm on WA
+    return (0, 'outside')                         # outside Surat — confirm on WA
 
 DEFAULT_TEAM = [
     dict(id='vihang',  name='Vihang',  role='Coffee — Production & Quality',
@@ -729,24 +723,22 @@ def bot_reply(msg, cart_total=0):
         text = ("Easy! Two ways to order:\n\n"
                 "🛒 **Add to cart** here on the site → click *Checkout on WhatsApp* — I'll send your order to our team.\n\n"
                 "📱 **Direct WhatsApp** — message us at +91 95743 23011, we reply within minutes.\n\n"
-                "Free shipping over ₹999. Delivery in 3–5 days across India.")
-        quick = ['Show best sellers', 'Free shipping info', 'Payment options']
+                "We deliver across Surat — delivery is confirmed on WhatsApp before dispatch.")
+        quick = ['Show best sellers', 'Delivery info', 'Payment options']
 
     elif intent == 'shipping':
         text = ("📦 **Delivery — Surat only for now:**\n"
-                "• **FREE** within 5 km of Piplod (Vesu, Citylight, Athwa, Piplod)\n"
-                "• **₹50** for other Surat pincodes\n"
-                "• Same-day or next-day delivery in most cases\n"
-                "• Cash on delivery + UPI accepted\n\n"
+                "• We deliver right across Surat\n"
+                "• Delivery is charged by your location and confirmed on WhatsApp before dispatch\n"
+                "• Same-day or next-day delivery in most cases\n\n"
                 "Outside Surat? Message us on WhatsApp — we'll arrange a courier and confirm the cost.")
         quick = ['Order on WhatsApp', 'My pincode is 395007', 'Outside Surat options']
 
     elif intent == 'returns':
-        text = ("🔄 **Returns are easy:**\n"
-                "• 7-day return window\n"
-                "• Message us on WhatsApp with your order number\n"
-                "• Damaged/unsatisfied? We replace or refund — no forms, no fuss\n"
-                "• Refunds within 3–5 working days")
+        text = ("🔄 **Something wrong with your order?**\n"
+                "• Just call or message us on WhatsApp\n"
+                "• Tell us your order number and what's wrong\n"
+                "• We're a small Surat team — we'll make it right, no forms, no fuss")
         quick = ['Contact support', 'Order help']
 
     elif intent == 'contact':
@@ -773,7 +765,7 @@ def bot_reply(msg, cart_total=0):
                 "☕ Beans 250g — ₹500–600\n"
                 "☕ Beans 1Kg — ₹2,000–2,400\n"
                 "🎁 Big Combo — ₹1,000 (best value)\n\n"
-                "All prices include GST. Free shipping over ₹999.")
+                "All prices include GST. Local delivery across Surat.")
         quick = ['Show best sellers', 'Recommend something', 'Help me choose']
 
     elif intent == 'brewing':
@@ -788,7 +780,6 @@ def bot_reply(msg, cart_total=0):
     elif intent == 'discount':
         text = ("🎁 **Current offers:**\n"
                 "• Up to 30% off site-wide (already applied — see strikethrough prices)\n"
-                "• Free shipping over ₹999\n"
                 "• Use code **FUKU10** for an extra 10% off your first order\n\n"
                 "I can add the code at checkout for you!")
         quick = ['Show best sellers', 'Apply FUKU10']
@@ -1723,13 +1714,12 @@ class Handler(BaseHTTPRequestHandler):
         }
 
     def _zone_for_order(self, order):
-        """Return zone label using server-side shipping rules: free_5km / surat_paid / outside_surat / unknown."""
+        """Return zone label using server-side shipping rules: surat / outside_surat / unknown."""
         addr = order.get('shipping_address') or ''
         _, zone = shipping_for(addr)
         # map shipping_for() vocab → Porter vocab
         return {
-            'free':    'free_5km',
-            'paid':    'surat_paid',
+            'surat':   'surat',
             'outside': 'outside_surat',
             'unknown': 'unknown',
         }.get(zone, 'unknown')

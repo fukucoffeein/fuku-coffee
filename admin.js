@@ -1754,8 +1754,7 @@ document.getElementById('refreshSubsBtn')?.addEventListener('click', loadSubscri
 // ============================================
 function zoneInfo(zone) {
   return {
-    free_5km:      { label: '5 km free zone',  tip: 'In-house bike — Porter optional',  cls: 'zone-free',    icon: '🏠' },
-    surat_paid:    { label: 'Surat paid zone', tip: 'Porter recommended for fast handoff', cls: 'zone-paid',  icon: '🛵' },
+    surat:         { label: 'Surat',           tip: 'Confirm delivery cost on WhatsApp',  cls: 'zone-free',  icon: '🛵' },
     outside_surat: { label: 'Outside Surat',   tip: 'Confirm courier & cost on WhatsApp first',  cls: 'zone-out',  icon: '📦' },
     unknown:       { label: 'Zone unknown',    tip: 'No pincode found — add an address first',   cls: 'zone-unknown', icon: '❓' },
   }[zone] || { label: zone, tip: '', cls: '', icon: '' };
@@ -1777,7 +1776,7 @@ function renderPorterSection(o) {
         <div id="porterQuoteResult"></div>
         <div class="porter-actions">
           <button type="button" class="btn-ghost" id="porterQuoteBtn">Get Quote</button>
-          <button type="button" class="btn-primary-modal" id="porterBookBtn">${o.delivery_zone === 'free_5km' ? 'Book Porter (optional)' : 'Book Porter →'}</button>
+          <button type="button" class="btn-primary-modal" id="porterBookBtn">${o.delivery_zone === 'surat' ? 'Book Porter (optional)' : 'Book Porter →'}</button>
         </div>
       </section>
     `;

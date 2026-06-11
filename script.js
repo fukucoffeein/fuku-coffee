@@ -303,18 +303,12 @@ window.cartTotal = cartTotal;
 // ============================================
 
 // Mirrors server.py shipping_for() so we can preview cost & zone in the UI.
-const FREE_PINCODES  = new Set(['395007','395017','395009','395013']);
-const SURAT_PINCODES = new Set(['395001','395002','395003','395004','395005','395006','395008',
-                                '395010','395011','395012','395023']);
-const SURAT_PAID_FEE = 50;
-
+// Delivery is charged by location and confirmed on WhatsApp — no free zone, no fixed fee.
 function zoneFor(pincode) {
   const pc = String(pincode || '').trim();
-  if (!/^\d{6}$/.test(pc))            return { key: 'none',     fee: 0, label: '— enter pincode —' };
-  if (FREE_PINCODES.has(pc))          return { key: 'free',     fee: 0, label: '🏠 5 km free zone · FREE delivery' };
-  if (SURAT_PINCODES.has(pc) || pc.startsWith('395') || pc.startsWith('394'))
-                                      return { key: 'paid',     fee: SURAT_PAID_FEE, label: `🛵 Surat paid zone · ₹${SURAT_PAID_FEE} delivery` };
-  return                                     { key: 'out',      fee: 0, label: '📦 Outside Surat · confirmed on WhatsApp' };
+  if (!/^\d{6}$/.test(pc))                          return { key: 'none',  fee: 0, label: '— enter pincode —' };
+  if (pc.startsWith('395') || pc.startsWith('394')) return { key: 'surat', fee: 0, label: '🛵 Surat · delivery confirmed on WhatsApp' };
+  return                                                   { key: 'out',   fee: 0, label: '📦 Outside Surat · confirmed on WhatsApp' };
 }
 
 let LOC_COORDS = null;          // { lat, lng, accuracy } when shared
@@ -369,14 +363,14 @@ function recalcCheckoutTotals() {
   const z = zoneFor(pincode);
   const pill = document.getElementById('coZonePill');
   pill.textContent = z.label;
-  pill.className = 'co-zone-pill ' + (z.key === 'free' ? 'zone-free' : z.key === 'paid' ? 'zone-paid' : z.key === 'out' ? 'zone-out' : '');
+  pill.className = 'co-zone-pill ' + (z.key === 'surat' ? 'zone-free' : z.key === 'out' ? 'zone-out' : '');
 
   const fee   = z.fee;
   const total = subtotal + fee;
   document.getElementById('coTotals').innerHTML = `
     <div class="co-total-row"><span>Subtotal</span><strong>₹${subtotal.toLocaleString('en-IN')}</strong></div>
-    <div class="co-total-row"><span>Delivery</span><strong>${z.key === 'out' ? 'Confirm on WA' : (fee === 0 ? 'FREE' : '₹' + fee)}</strong></div>
-    <div class="co-total-row total"><span>Total</span><strong>₹${total.toLocaleString('en-IN')}${z.key === 'out' ? ' + courier' : ''}</strong></div>
+    <div class="co-total-row"><span>Delivery</span><strong>Confirm on WhatsApp</strong></div>
+    <div class="co-total-row total"><span>Total</span><strong>₹${total.toLocaleString('en-IN')} + delivery</strong></div>
   `;
 }
 
@@ -520,8 +514,8 @@ async function submitCheckout(e) {
     msg += `${i + 1}. ${p.name}\n   × ${item.qty}  =  ₹${(p.price * item.qty).toLocaleString('en-IN')}\n\n`;
   });
   msg += `*Subtotal: ₹${subtotal.toLocaleString('en-IN')}*\n`;
-  msg += `*Delivery: ${shipping === 0 ? (z.key === 'out' ? 'To be confirmed' : 'FREE') : '₹' + shipping}*\n`;
-  msg += `*Total: ₹${total.toLocaleString('en-IN')}${z.key === 'out' ? ' + courier' : ''}*\n`;
+  msg += `*Delivery: To be confirmed on WhatsApp*\n`;
+  msg += `*Total: ₹${total.toLocaleString('en-IN')} + delivery*\n`;
   if (orderNo) msg += `Order No: *${orderNo}*\n`;
   msg += `\n👤 *Customer Details:*\n`;
   msg += `Name: ${name}\n`;
