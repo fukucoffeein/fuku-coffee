@@ -5,6 +5,9 @@
 const WA_NUMBER  = '919574323011';
 const STORE_NAME = 'FUKU Coffee';
 const RESELLER_KEY = 'fuku_reseller_ref';
+// Reseller program paused for now: hides the "You're shopping with…" banner and
+// stops attaching reseller credit to orders. Flip to true to re-enable.
+const RESELLER_ENABLED = false;
 
 let PRODUCTS = [];
 window.__FUKU_PRODUCTS__ = PRODUCTS;
@@ -13,6 +16,7 @@ window.__FUKU_PRODUCTS__ = PRODUCTS;
 // RESELLER REF CAPTURE & BANNER
 // ============================================
 async function initReseller() {
+  if (!RESELLER_ENABLED) return;   // paused — banner never shows
   const url = new URL(location.href);
   const ref = (url.searchParams.get('ref') || '').toUpperCase().trim();
   if (ref) {
@@ -40,6 +44,7 @@ function dismissReseller() {
   localStorage.removeItem(RESELLER_KEY);
 }
 function currentResellerRef() {
+  if (!RESELLER_ENABLED) return null;   // paused — don't attach reseller credit to orders
   return localStorage.getItem(RESELLER_KEY) || null;
 }
 window.currentResellerRef = currentResellerRef;
