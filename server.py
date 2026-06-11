@@ -723,13 +723,13 @@ def bot_reply(msg, cart_total=0):
         text = ("Easy! Two ways to order:\n\n"
                 "🛒 **Add to cart** here on the site → click *Checkout on WhatsApp* — I'll send your order to our team.\n\n"
                 "📱 **Direct WhatsApp** — message us at +91 95743 23011, we reply within minutes.\n\n"
-                "We deliver across Surat — delivery is confirmed on WhatsApp before dispatch.")
+                "We deliver across Surat — delivery is charged extra as per distance and confirmed on WhatsApp.")
         quick = ['Show best sellers', 'Delivery info', 'Payment options']
 
     elif intent == 'shipping':
         text = ("📦 **Delivery — Surat only for now:**\n"
                 "• We deliver right across Surat\n"
-                "• Delivery is charged by your location and confirmed on WhatsApp before dispatch\n"
+                "• Delivery is charged extra as per distance, confirmed on WhatsApp before dispatch\n"
                 "• Same-day or next-day delivery in most cases\n\n"
                 "Outside Surat? Message us on WhatsApp — we'll arrange a courier and confirm the cost.")
         quick = ['Order on WhatsApp', 'My pincode is 395007', 'Outside Surat options']

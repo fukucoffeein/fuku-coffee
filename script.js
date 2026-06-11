@@ -307,7 +307,7 @@ window.cartTotal = cartTotal;
 function zoneFor(pincode) {
   const pc = String(pincode || '').trim();
   if (!/^\d{6}$/.test(pc))                          return { key: 'none',  fee: 0, label: '— enter pincode —' };
-  if (pc.startsWith('395') || pc.startsWith('394')) return { key: 'surat', fee: 0, label: '🛵 Surat · delivery confirmed on WhatsApp' };
+  if (pc.startsWith('395') || pc.startsWith('394')) return { key: 'surat', fee: 0, label: '🛵 Surat · delivery charged extra (as per distance)' };
   return                                                   { key: 'out',   fee: 0, label: '📦 Outside Surat · confirmed on WhatsApp' };
 }
 
@@ -369,7 +369,7 @@ function recalcCheckoutTotals() {
   const total = subtotal + fee;
   document.getElementById('coTotals').innerHTML = `
     <div class="co-total-row"><span>Subtotal</span><strong>₹${subtotal.toLocaleString('en-IN')}</strong></div>
-    <div class="co-total-row"><span>Delivery</span><strong>Confirm on WhatsApp</strong></div>
+    <div class="co-total-row"><span>Delivery</span><strong>Extra · by distance</strong></div>
     <div class="co-total-row total"><span>Total</span><strong>₹${total.toLocaleString('en-IN')} + delivery</strong></div>
   `;
 }
@@ -513,7 +513,7 @@ async function submitCheckout(e) {
     msg += `${i + 1}. ${p.name}\n   × ${item.qty}  =  ₹${(p.price * item.qty).toLocaleString('en-IN')}\n\n`;
   });
   msg += `*Subtotal: ₹${subtotal.toLocaleString('en-IN')}*\n`;
-  msg += `*Delivery: To be confirmed on WhatsApp*\n`;
+  msg += `*Delivery: Charged extra as per distance (confirmed on WhatsApp)*\n`;
   msg += `*Total: ₹${total.toLocaleString('en-IN')} + delivery*\n`;
   if (orderNo) msg += `Order No: *${orderNo}*\n`;
   msg += `\n👤 *Customer Details:*\n`;
