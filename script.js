@@ -454,7 +454,6 @@ async function submitCheckout(e) {
   const address = document.getElementById('coAddress').value.trim();
   const pincode = document.getElementById('coPincode').value.trim();
   const notes   = document.getElementById('coNotes').value.trim();
-  const payment = document.querySelector('input[name="coPayment"]:checked').value;
   const fullAddress = `${address}, Pincode ${pincode}`;
 
   // Save for next time
@@ -525,7 +524,7 @@ async function submitCheckout(e) {
   if (LOC_COORDS) {
     msg += `\n📍 *GPS Location:*\nhttps://maps.google.com/?q=${LOC_COORDS.lat},${LOC_COORDS.lng}\n(accuracy ±${LOC_COORDS.accuracy}m)\n`;
   }
-  msg += `\n💰 *Payment:* ${payment === 'cash' ? '💵 Cash on Delivery' : '🌐 Online (UPI / Bank — please share details)'}\n`;
+  msg += `\n💰 *Payment:* 🌐 Online (UPI / Bank — please share details)\n`;
   if (notes) msg += `\n📝 *Notes:* ${notes}\n`;
   msg += `\nThanks! 🙏`;
 
